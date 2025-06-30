@@ -11,16 +11,10 @@ export default function HomeScreen() {
     }
 
     return (
-        <SafeAreaView style={{ flex: 1, backgroundColor: '#000000' }}>
-            <View style={homeStyles.headerContent}>
-                <Image
-                    source={{ uri: 'https://cdn.royaleapi.com/static/img/branding/royaleapi-logo-128.png?t=feb800c3c' }}
-                    style={homeStyles.logo}
-                />
-                <Text style={homeStyles.text}>RoyaleAPI Mobile</Text>
-
-            </View>
-
+        <SafeAreaView 
+            style={{ flex: 1, backgroundColor: '#000000' }}
+            edges={['bottom', 'left', 'right']}
+        >
             <FlatList
                 data={lista}
                 keyExtractor={(item) => item}

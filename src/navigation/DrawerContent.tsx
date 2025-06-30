@@ -19,6 +19,18 @@ const DrawerContent: React.FC<DrawerContentProps> = ({ navigation }) => {
                 >
                     <Text style={styles.text}>Home</Text>
                 </TouchableOpacity>
+                <TouchableOpacity
+                    style={styles.menuItem}
+                    onPress={() => viewModel.navigateTo('Decks')}
+                >
+                    <Text style={styles.text}>Decks</Text>
+                </TouchableOpacity>
+                <TouchableOpacity
+                    style={styles.menuItem}
+                    onPress={() => viewModel.navigateTo('Clans')}
+                >
+                    <Text style={styles.text}>Clans</Text>
+                </TouchableOpacity>
             </View>
         </SafeAreaView>
     );

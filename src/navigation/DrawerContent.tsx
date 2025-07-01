@@ -1,6 +1,6 @@
 import React from 'react';
 import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
-import { DrawerViewModel } from '../viewModels/DrawerViewModel';
+import { DrawerViewModel } from '../components/customHeader/DrawerViewModel';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 interface DrawerContentProps {

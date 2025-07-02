@@ -26,6 +26,16 @@ const cardsStyles = StyleSheet.create({
         position: 'relative',
         backgroundColor: '#1E1E1E',
     },
+    cycleContainer: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        marginTop: 4,
+    },
+    cycleImage:{
+        width: 20,
+        height: 20,
+        marginRight: 5,
+    },
     gradientBackground: {
         ...StyleSheet.absoluteFillObject,
         borderRadius: 10,

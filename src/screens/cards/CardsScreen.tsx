@@ -65,14 +65,6 @@ const CardsScreen = () => {
 
                 }
             ]}>
-                {/* {hasGradient && (
-                    <LinearGradient
-                        colors={gradientConfig.colors}
-                        start={gradientConfig.start}
-                        end={gradientConfig.end}
-                        style={cardsStyles.gradientBackground}
-                    />
-                )} */}
                 {isSelected ? (
                     <Image
                         source={require('../../assets/images/evo_background.png')}
@@ -97,8 +89,18 @@ const CardsScreen = () => {
                         resizeMode="contain"
                     />
                     <View style={cardsStyles.cardDetails}>
-                        <Text style={cardsStyles.cardName}>{item.name}</Text>
+                        <Text style={cardsStyles.cardName}>{isSelected ? "Evo " : " "}{item.name}</Text>
                         <Text style={cardsStyles.cardText}>{item.rarity.toUpperCase()}</Text>
+                        {(isSelected && item.evolutionCycle) && (
+                            <View style={cardsStyles.cycleContainer}>
+                                <Image
+                                    source={require('../../assets/images/Cycles.webp')}
+                                    style={cardsStyles.cycleImage}
+                                    resizeMode="contain"
+                                />
+                                <Text style={cardsStyles.cardText}>Cicles: {item.evolutionCycle}</Text>
+                            </View>
+                        )}
                     </View>
                 </View>
 

@@ -9,6 +9,7 @@ export interface Card {
     evolutionMedium?: string;
   };
   rarity: 'common' | 'rare' | 'epic' | 'legendary';
+  evolutionCycle: number;
 }
 
 export interface CardsResponse {

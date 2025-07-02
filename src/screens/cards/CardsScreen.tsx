@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, FlatList, Image, StatusBar, ColorValue } from 'react-native';
+import { View, Text, FlatList, Image, StatusBar, ColorValue, TouchableOpacity } from 'react-native';
 import { CardsViewModel } from './CardsViewModel';
 import { Card } from '../../models/Card';
 import { SafeAreaView } from 'react-native-safe-area-context';
@@ -47,24 +47,52 @@ const CardsScreen = () => {
     }, []);
 
     const CardItem = ({ item }: { item: Card }) => {
+        const [isSelected, setIsSelected] = React.useState(false);
+
         const gradientConfig = RARITY_GRADIENTS[item.rarity as keyof typeof RARITY_GRADIENTS];
         const hasGradient = !!gradientConfig;
         const solidColor = RARITY_COLORS[item.rarity as keyof typeof RARITY_COLORS] || RARITY_COLORS.default;
 
+        const handlePress = () => {
+            setIsSelected(!isSelected);
+        };
+
         return (
-            <View style={[cardsStyles.cardContainer, !hasGradient && { backgroundColor: solidColor }]}>
-                {hasGradient && (
+            <View style={[
+                cardsStyles.cardContainer,
+                !hasGradient && { backgroundColor: solidColor },
+                isSelected && {
+
+                }
+            ]}>
+                {/* {hasGradient && (
                     <LinearGradient
                         colors={gradientConfig.colors}
                         start={gradientConfig.start}
                         end={gradientConfig.end}
                         style={cardsStyles.gradientBackground}
                     />
+                )} */}
+                {isSelected ? (
+                    <Image
+                        source={require('../../assets/images/evo_background.png')}
+                        style={cardsStyles.backgroundImage}
+                        resizeMode="cover"
+                    />
+                ) : hasGradient ? (
+                    <LinearGradient
+                        colors={gradientConfig.colors}
+                        start={gradientConfig.start}
+                        end={gradientConfig.end}
+                        style={cardsStyles.gradientBackground}
+                    />
+                ) : (
+                    <View style={[cardsStyles.solidBackground, { backgroundColor: solidColor }]} />
                 )}
 
                 <View style={[cardsStyles.cardContent, item.rarity === 'legendary' ? { backgroundColor: 'rgba(0, 0, 0, 0.2)' } : null]}>
                     <Image
-                        source={{ uri: item.iconUrls.medium }}
+                        source={{ uri: isSelected && item.iconUrls.evolutionMedium ? item.iconUrls.evolutionMedium : item.iconUrls.medium }}
                         style={cardsStyles.cardIcon}
                         resizeMode="contain"
                     />
@@ -81,6 +109,16 @@ const CardsScreen = () => {
                     />
                     <Text style={cardsStyles.elixirText}>{item.elixirCost}</Text>
                 </View>
+
+                {item.maxEvolutionLevel && (
+                    <TouchableOpacity style={cardsStyles.evoContainer} onPress={handlePress}>
+                        <Image
+                            source={isSelected ? require('../../assets/images/letter-x.png') : require('../../assets/images/Wild_Shard.webp')}
+                            style={cardsStyles.evoBackground}
+                        />
+                        <Text style={cardsStyles.evoText}>Evo</Text>
+                    </TouchableOpacity>
+                )}
             </View>
         );
     };

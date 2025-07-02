@@ -30,6 +30,18 @@ const cardsStyles = StyleSheet.create({
         ...StyleSheet.absoluteFillObject,
         borderRadius: 10,
     },
+    backgroundImage: {
+        ...StyleSheet.absoluteFillObject,
+        width: '115%',
+        height: '135%',
+        resizeMode: 'cover',
+        position: 'absolute',
+        top: '-5%',
+        left: '-5%',
+    },
+    solidBackground: {
+        ...StyleSheet.absoluteFillObject,
+    },
     cardContent: {
         flexDirection: 'row',
         alignItems: 'center',
@@ -77,6 +89,31 @@ const cardsStyles = StyleSheet.create({
         resizeMode: 'contain',
     },
     elixirText: {
+        color: 'white',
+        fontWeight: 'bold',
+        fontSize: 16,
+
+        textShadowColor: 'rgba(0, 0, 0, 0.8)',
+        textShadowOffset: { width: 1, height: 1 },
+        textShadowRadius: 2,
+    },
+    evoContainer: {
+        position: 'absolute',
+        top: 60,
+        right: 10,
+        width: 40,
+        height: 40,
+        justifyContent: 'center',
+        alignItems: 'center',
+        zIndex: 3,
+    },
+    evoBackground: {
+        position: 'absolute',
+        width: '100%',
+        height: '100%',
+        resizeMode: 'contain',
+    },
+    evoText: {
         color: 'white',
         fontWeight: 'bold',
         fontSize: 16,

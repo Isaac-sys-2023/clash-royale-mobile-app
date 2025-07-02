@@ -39,6 +39,7 @@ export default function App() {
               />
             ),
             drawerType: 'slide',
+            drawerPosition:"right",
             drawerStyle: {
               backgroundColor: '#000000',
               width: 240,

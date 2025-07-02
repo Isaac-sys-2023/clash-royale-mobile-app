@@ -47,6 +47,12 @@ const DrawerContent: React.FC<DrawerContentProps> = ({
                     <Text style={[styles.text, getTextStyle('Decks')]}>Decks</Text>
                 </TouchableOpacity>
                 <TouchableOpacity
+                    style={[styles.menuItem, getItemStyle('Cards')]}
+                    onPress={() => viewModel.navigateTo('Cards')}
+                >
+                    <Text style={[styles.text, getTextStyle('Cards')]}>Cards</Text>
+                </TouchableOpacity>
+                <TouchableOpacity
                     style={[styles.menuItem, getItemStyle('Clans')]}
                     onPress={() => viewModel.navigateTo('Clans')}
                 >

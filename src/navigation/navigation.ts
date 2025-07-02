@@ -3,4 +3,5 @@ export type RootDrawerParamList = {
   Settings: undefined;
   Decks: undefined;
   Clans: undefined;
+  Cards: undefined,
 };

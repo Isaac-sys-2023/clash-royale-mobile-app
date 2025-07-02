@@ -14,6 +14,7 @@ import DrawerContent from "./src/navigation/DrawerContent";
 import { RootDrawerParamList } from "./src/navigation/navigation";
 
 import { StatusBar } from "react-native";
+import CardsScreen from "./src/screens/cards/CardsScreen";
 
 const Drawer = createDrawerNavigator<RootDrawerParamList>();
 
@@ -50,6 +51,7 @@ export default function App() {
           <Drawer.Screen name="Clans" component={ClansScreen} />
           <Drawer.Screen name="Decks" component={DecksScreen} />
           <Drawer.Screen name="Settings" component={SettingsScreen} />
+          <Drawer.Screen name="Cards" component={CardsScreen} />
         </Drawer.Navigator>
       </NavigationContainer>
     </SafeAreaProvider>

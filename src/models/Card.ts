@@ -3,13 +3,13 @@ export interface Card {
   id: number;
   maxLevel: number;
   maxEvolutionLevel?: number;
-  elixirCost: number;
+  elixirCost?: number;
   iconUrls: {
     medium: string;
     evolutionMedium?: string;
   };
   rarity: 'common' | 'rare' | 'epic' | 'legendary';
-  evolutionCycle: number;
+  evolutionCycle?: number;
 }
 
 export interface CardsResponse {

@@ -132,6 +132,15 @@ const cardsStyles = StyleSheet.create({
         textShadowOffset: { width: 1, height: 1 },
         textShadowRadius: 2,
     },
+    sectionHeader: {
+        fontSize: 20,
+        fontWeight: 'bold',
+        color: 'white',
+        paddingVertical: 10,
+        paddingHorizontal: 15,
+        backgroundColor: '#000',
+        textAlign: 'center',
+    },
 });
 
 export default cardsStyles

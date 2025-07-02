@@ -5,6 +5,7 @@ import { Card } from '../../models/Card';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { LinearGradient } from 'expo-linear-gradient';
 import cardsStyles from './cardsStyles'
+import { ScrollView } from 'react-native-gesture-handler';
 
 const RARITY_GRADIENTS = {
     legendary: {
@@ -28,6 +29,7 @@ const RARITY_COLORS: Record<string, string> = {
 
 const CardsScreen = () => {
     const [cards, setCards] = useState<Card[]>([]);
+    const [supportCards, setSupportCards] = useState<Card[]>([]);
     const [isLoading, setIsLoading] = useState(true);
     const [viewModel] = useState(new CardsViewModel());
 
@@ -36,6 +38,7 @@ const CardsScreen = () => {
             try {
                 await viewModel.loadAllCards();
                 setCards(viewModel.getCards());
+                setSupportCards(viewModel.getSupportCards());
             } catch (error) {
                 console.error(error);
             } finally {
@@ -125,18 +128,38 @@ const CardsScreen = () => {
         );
     };
 
+    const CardSection = ({ title, data }: { title: string, data: Card[] }) => {
+        return (
+            <>
+                <Text style={cardsStyles.sectionHeader}>{title}</Text>
+                <FlatList
+                    data={data}
+                    renderItem={({ item }) => <CardItem item={item} />}
+                    keyExtractor={(item) => `${item.id || item.name}-${item.elixirCost}`}
+                    contentContainerStyle={cardsStyles.flatListContent}
+                    horizontal={false}
+                    scrollEnabled={false}
+                />
+            </>
+        );
+    };
+
     if (isLoading) {
         return <Text style={{ color: 'black' }}>Loading cards...</Text>;
     }
 
     return (
-        <SafeAreaView style={cardsStyles.safeArea} edges={['bottom', 'left', 'right']}>
+        <SafeAreaView style={[cardsStyles.safeArea, { flex: 1 }]} edges={['bottom', 'left', 'right']}>
             <StatusBar barStyle="light-content" backgroundColor="#000" />
+
             <FlatList
-                data={cards}
-                renderItem={({ item }) => <CardItem item={item} />}
-                keyExtractor={(item) => `${item.name}-${item.elixirCost}`}
-                contentContainerStyle={cardsStyles.flatListContent}
+                data={[{ key: 'cards' }, { key: 'towerCards' }]}
+                renderItem={({ item }) => (
+                    item.key === 'cards'
+                        ? <CardSection title="Cards" data={cards} />
+                        : <CardSection title="Tower Cards" data={supportCards} />
+                )}
+                keyExtractor={(item) => item.key}
                 showsVerticalScrollIndicator={false}
             />
         </SafeAreaView>

@@ -5,7 +5,8 @@ import { Card } from '../../models/Card';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { LinearGradient } from 'expo-linear-gradient';
 import cardsStyles from './cardsStyles'
-import { ScrollView } from 'react-native-gesture-handler';
+import { FilterParamSelector } from '@/src/components/filter/filterSelector/FilterParamSelector';
+import FilterButton from '@/src/components/filter/filterButton/FilterButton';
 
 const RARITY_GRADIENTS = {
     legendary: {
@@ -33,19 +34,43 @@ const CardsScreen = () => {
     const [isLoading, setIsLoading] = useState(true);
     const [viewModel] = useState(new CardsViewModel());
 
+    const [showParamSelector, setShowParamSelector] = useState<{
+        visible: boolean;
+        type: 'elixir' | 'rarity' | null;
+    }>({ visible: false, type: null });
+
+    const applyFilter = () => {
+        const result = viewModel.getFilteredCards();
+        setCards(result.cards);
+        setSupportCards(result.supportCards);
+    };
+
+    const handleFilterPress = (type: 'all' | 'evo' | 'elixir' | 'rarity' | 'cardType', param?: any) => {
+        if (type === 'elixir' || type === 'rarity') {
+            setShowParamSelector({ visible: true, type });
+        } else if (type === 'cardType') {
+            viewModel.setFilter('cardType', param);
+            applyFilter();
+        } else {
+            viewModel.setFilter(type);
+            applyFilter();
+        }
+    };
+
+    const currentFilter = viewModel.getCurrentFilter();
+
     useEffect(() => {
         const loadData = async () => {
             try {
                 await viewModel.loadAllCards();
-                setCards(viewModel.getCards());
-                setSupportCards(viewModel.getSupportCards());
+                viewModel.setFilter('all');
+                applyFilter();
             } catch (error) {
                 console.error(error);
             } finally {
                 setIsLoading(false);
             }
         };
-
         loadData();
     }, []);
 
@@ -64,9 +89,6 @@ const CardsScreen = () => {
             <View style={[
                 cardsStyles.cardContainer,
                 !hasGradient && { backgroundColor: solidColor },
-                isSelected && {
-
-                }
             ]}>
                 {isSelected ? (
                     <Image
@@ -92,7 +114,7 @@ const CardsScreen = () => {
                         resizeMode="contain"
                     />
                     <View style={cardsStyles.cardDetails}>
-                        <Text style={cardsStyles.cardName}>{isSelected ? "Evo " : " "}{item.name}</Text>
+                        <Text style={cardsStyles.cardName}>{isSelected ? "Evo " : ""}{item.name}</Text>
                         <Text style={cardsStyles.cardText}>{item.rarity.toUpperCase()}</Text>
                         {(isSelected && item.evolutionCycle) && (
                             <View style={cardsStyles.cycleContainer}>
@@ -129,6 +151,10 @@ const CardsScreen = () => {
     };
 
     const CardSection = ({ title, data }: { title: string, data: Card[] }) => {
+        if (data.length === 0) {
+            return
+        }
+
         return (
             <>
                 <Text style={cardsStyles.sectionHeader}>{title}</Text>
@@ -151,6 +177,40 @@ const CardsScreen = () => {
     return (
         <SafeAreaView style={[cardsStyles.safeArea, { flex: 1 }]} edges={['bottom', 'left', 'right']}>
             <StatusBar barStyle="light-content" backgroundColor="#000" />
+
+            <FilterParamSelector
+                visible={showParamSelector.visible}
+                type={showParamSelector.type!}
+                onSelect={(value) => {
+                    if (showParamSelector.type === 'elixir') {
+                        viewModel.setFilter('elixir', Number(value));
+                    } else if (showParamSelector.type === 'rarity') {
+                        viewModel.setFilter('rarity', String(value));
+                    }
+                    applyFilter();
+                    setShowParamSelector({ visible: false, type: null });
+                }}
+                onClose={() => setShowParamSelector({ visible: false, type: null })}
+            />
+
+            <View style={cardsStyles.filterBar}>
+                <FilterButton label="All" active={currentFilter.type === 'all'} onPress={() => {handleFilterPress('all'); setShowParamSelector({ visible: false, type: null })}}/>
+                <FilterButton label="Evo" active={currentFilter.type === 'evo'} onPress={() => {handleFilterPress('evo'); setShowParamSelector({ visible: false, type: null })}}/>
+                <FilterButton label="Elixir" active={currentFilter.type === 'elixir'} onPress={() => handleFilterPress('elixir')}/>
+                <FilterButton label="Rarity" active={currentFilter.type === 'rarity'} onPress={() => handleFilterPress('rarity')} />
+
+                <View style={cardsStyles.typeFilters}>
+                    <FilterButton label="Cards" active={currentFilter.type === 'cardType' && currentFilter.param === 'card'} onPress={() => {handleFilterPress('cardType', 'card'); setShowParamSelector({ visible: false, type: null })}} small/>
+                    <FilterButton label="Towers" active={currentFilter.type === 'cardType' && currentFilter.param === 'support'} onPress={() => {handleFilterPress('cardType', 'support'); setShowParamSelector({ visible: false, type: null })}} small/>
+                </View>
+            </View>
+
+            {(currentFilter.param && currentFilter.type !== 'cardType') && (
+                <Text style={cardsStyles.currentParam}>
+                    {currentFilter.type === 'elixir' && `Elixir: ${currentFilter.param}`}
+                    {currentFilter.type === 'rarity' && `Rarity: ${currentFilter.param}`}
+                </Text>
+            )}
 
             <FlatList
                 data={[{ key: 'cards' }, { key: 'towerCards' }]}

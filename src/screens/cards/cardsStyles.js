@@ -141,6 +141,23 @@ const cardsStyles = StyleSheet.create({
         backgroundColor: '#000',
         textAlign: 'center',
     },
+    filterBar: {
+        flexDirection: 'row',
+        padding: 10,
+        backgroundColor: '#f5f5f5',
+        alignItems: 'center',
+        flexWrap: 'wrap',
+    },
+    typeFilters: {
+        flexDirection: 'row',
+        marginLeft: 'auto',
+    },
+    currentParam: {
+        padding: 8,
+        backgroundColor: '#e3f2fd',
+        textAlign: 'center',
+        fontStyle: 'italic',
+    },
 });
 
 export default cardsStyles

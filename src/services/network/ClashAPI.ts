@@ -10,6 +10,17 @@ export class ClashRoyaleAPI extends ApiService {
 
   //players endpoints
   async getPlayer(tag: string): Promise<Player> {
-    return this.get<Player>(`players/${tag}`)
-  } 
+    try {
+      const cleanTag = tag.replace('#', '');
+
+      if (!cleanTag) {
+        throw new Error('El tag del jugador no puede estar vacío');
+      }
+
+      return this.get<Player>(`/players/${cleanTag}`)
+    } catch (error) {
+      console.error('Error fetching player data:', error);
+      throw error;
+    }
+  }
 }

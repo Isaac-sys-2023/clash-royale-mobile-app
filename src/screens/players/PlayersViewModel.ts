@@ -1,3 +1,4 @@
+import { BattlePlayerLog } from '@/src/models/BattlePlayerLog';
 import { Player } from '../../models/Player';
 import { PlayerService } from '../../services/PlayerService';
 
@@ -5,11 +6,18 @@ export class PlayersViewModel {
     private playerService: PlayerService;
     private currentTag: string = "";
     private player: Player = this.createEmptyPlayer();
+    private battlelog: BattlePlayerLog = this.createEmptyPlayerBattleLog();
     private isLoading: boolean = false;
     private error: string | null = null;
 
     constructor(playerService?: PlayerService) {
         this.playerService = playerService || new PlayerService();
+    }
+
+    createEmptyPlayerBattleLog(): BattlePlayerLog {
+        return {
+            battles: []
+        };
     }
 
     createEmptyPlayer(): Player {
@@ -111,10 +119,12 @@ export class PlayersViewModel {
 
         try {
             this.player = await this.playerService.getPlayer(this.currentTag);
+            this.battlelog = await this.playerService.getBattlePlayerLog(this.currentTag);
         } catch (error) {
             console.error('Error loading player:', error);
             this.error = `No se pudo cargar el jugador con tag ${this.currentTag}`;
             this.player = this.createEmptyPlayer();
+            this.battlelog = this.createEmptyPlayerBattleLog();
         } finally {
             this.isLoading = false;
         }
@@ -122,6 +132,10 @@ export class PlayersViewModel {
 
     getPlayer(): Player {
         return this.player;
+    }
+
+    getPlayerBattleLog(): BattlePlayerLog {
+        return this.battlelog;
     }
 
     getLoadingState(): boolean {

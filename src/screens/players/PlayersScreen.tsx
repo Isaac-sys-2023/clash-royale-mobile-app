@@ -5,6 +5,7 @@ import { StatusBar } from 'expo-status-bar';
 import { MaterialIcons } from '@expo/vector-icons';
 import { PlayersViewModel } from './PlayersViewModel';
 import { Player } from '@/src/models/Player';
+import { BattlePlayerLog } from '@/src/models/BattlePlayerLog';
 
 interface PlayerScreenProps {
     tag?: string;
@@ -13,6 +14,7 @@ interface PlayerScreenProps {
 const PlayerScreen = ({ tag }: PlayerScreenProps) => {
     const [viewModel] = useState(() => new PlayersViewModel());
     const [player, setPlayer] = useState<Player>(viewModel.createEmptyPlayer());
+    const [playerBattleLog, setPlayerBattleLog] = useState<BattlePlayerLog>(viewModel.createEmptyPlayerBattleLog())
     const [isLoading, setIsLoading] = useState(false);
     const [error, setError] = useState<string | null>(null);
     const [searchInput, setSearchInput] = useState(tag ? tag.trim().replace('#', '') : '');
@@ -38,11 +40,16 @@ const PlayerScreen = ({ tag }: PlayerScreenProps) => {
             viewModel.setCurrentTag(searchInput);
             await viewModel.searchPlayer();
             setPlayer(viewModel.getPlayer());
+            
+            console.log('Setting battle log:', JSON.stringify(viewModel.getPlayerBattleLog(), null, 2));
+            
+            setPlayerBattleLog(viewModel.getPlayerBattleLog());
             setError(viewModel.getError());
         } catch (error) {
             console.error('Search error:', error);
             setError('Error al buscar el jugador');
             setPlayer(viewModel.createEmptyPlayer());
+            setPlayerBattleLog(viewModel.createEmptyPlayerBattleLog());
         } finally {
             setIsLoading(false);
         }
@@ -96,6 +103,65 @@ const PlayerScreen = ({ tag }: PlayerScreenProps) => {
                     <Text style={styles.playerTag}>{player.tag}</Text>
                     <Text style={styles.playerInfo}>Nivel: {player.expLevel}</Text>
                     <Text style={styles.playerInfo}>Trofeos: {player.trophies}</Text>
+
+                    {playerBattleLog.battles.length > 0 && (
+                        <View style={styles.battleLogContainer}>
+                            <Text style={styles.sectionTitle}>Historial de Batallas</Text>
+
+                            {playerBattleLog.battles.map((battle, index) => (
+                                <View key={`${battle.battleTime}-${index}`} style={styles.battleCard}>
+                                    <View style={styles.battleHeader}>
+                                        <Text style={styles.battleMode}>{battle.gameMode.name}</Text>
+                                        <Text style={styles.battleTime}>
+                                            {new Date(battle.battleTime).toLocaleString()}
+                                        </Text>
+                                    </View>
+
+                                    <View style={styles.battleTeams}>
+                                        {/* Jugador (team) */}
+                                        <View style={styles.teamContainer}>
+                                            <Text style={styles.teamTitle}>Tú</Text>
+                                            <Text style={styles.playerNameText}>
+                                                {battle.team[0].name} ({battle.team[0].crowns} coronas)
+                                            </Text>
+                                            <Text style={styles.trophyChange}>
+                                                {battle.team[0].trophyChange > 0 ? '+' : ''}
+                                                {battle.team[0].trophyChange} trofeos
+                                            </Text>
+                                        </View>
+
+                                        {/* VS */}
+                                        <Text style={styles.vsText}>VS</Text>
+
+                                        {/* Oponente */}
+                                        <View style={styles.teamContainer}>
+                                            <Text style={styles.teamTitle}>Oponente</Text>
+                                            <Text style={styles.playerNameText}>
+                                                {battle.opponent[0].name} ({battle.opponent[0].crowns} coronas)
+                                            </Text>
+                                            <Text style={styles.trophyChange}>
+                                                {battle.opponent[0].trophyChange > 0 ? '+' : ''}
+                                                {battle.opponent[0].trophyChange} trofeos
+                                            </Text>
+                                        </View>
+                                    </View>
+
+                                    {/* Cartas usadas */}
+                                    <View style={styles.cardsContainer}>
+                                        <Text style={styles.cardsTitle}>Tus cartas:</Text>
+                                        <View style={styles.cardsGrid}>
+                                            {battle.team[0].cards.map((card, i) => (
+                                                <View key={`${card.id}-${i}`} style={styles.cardItem}>
+                                                    <Text style={styles.cardName}>{card.name}</Text>
+                                                    <Text style={styles.cardLevel}>Nvl {card.level}</Text>
+                                                </View>
+                                            ))}
+                                        </View>
+                                    </View>
+                                </View>
+                            ))}
+                        </View>
+                    )}
                 </View>
             )}
 
@@ -177,6 +243,85 @@ const styles = StyleSheet.create({
         color: '#FFF',
         fontSize: 16,
         marginBottom: 8,
+    },
+
+    battleLogContainer: {
+        marginTop: 20,
+    },
+    sectionTitle: {
+        color: '#BB86FC',
+        fontSize: 18,
+        fontWeight: 'bold',
+        marginBottom: 10,
+    },
+    battleCard: {
+        backgroundColor: '#333',
+        borderRadius: 10,
+        padding: 15,
+        marginBottom: 15,
+    },
+    battleHeader: {
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        marginBottom: 10,
+    },
+    battleMode: {
+        color: '#FFF',
+        fontWeight: 'bold',
+    },
+    battleTime: {
+        color: '#AAA',
+        fontSize: 12,
+    },
+    battleTeams: {
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        alignItems: 'center',
+        marginBottom: 10,
+    },
+    teamContainer: {
+        flex: 1,
+    },
+    teamTitle: {
+        color: '#FFF',
+        fontWeight: 'bold',
+    },
+    playerNameText: {
+        color: '#FFF',
+    },
+    trophyChange: {
+        color: '#4CAF50', // Verde para ganancias, podrías cambiar a rojo si es negativo
+    },
+    vsText: {
+        color: '#FFF',
+        fontWeight: 'bold',
+        marginHorizontal: 10,
+    },
+    cardsContainer: {
+        marginTop: 10,
+    },
+    cardsTitle: {
+        color: '#BB86FC',
+        marginBottom: 5,
+    },
+    cardsGrid: {
+        flexDirection: 'row',
+        flexWrap: 'wrap',
+    },
+    cardItem: {
+        backgroundColor: '#444',
+        borderRadius: 5,
+        padding: 5,
+        margin: 3,
+        width: '23%', // Para que quepan 4 por fila
+    },
+    cardName: {
+        color: '#FFF',
+        fontSize: 12,
+    },
+    cardLevel: {
+        color: '#AAA',
+        fontSize: 10,
     },
 });
 

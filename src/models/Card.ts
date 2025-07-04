@@ -2,7 +2,11 @@ export interface Card {
   name: string;
   id: number;
   maxLevel: number;
+  level?: number;
+  starLevel?: number;
+  count?: number;
   maxEvolutionLevel?: number;
+  evolutionLevel?: number;
   elixirCost?: number;
   iconUrls: {
     medium: string;

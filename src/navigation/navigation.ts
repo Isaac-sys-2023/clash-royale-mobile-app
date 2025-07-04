@@ -4,5 +4,5 @@ export type RootDrawerParamList = {
   Decks: undefined;
   Clans: undefined;
   Cards: undefined;
-  Player: undefined;
+  Player: { tag?: string }; 
 };

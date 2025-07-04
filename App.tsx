@@ -41,7 +41,7 @@ export default function App() {
               />
             ),
             drawerType: 'slide',
-            drawerPosition:"right",
+            drawerPosition: "right",
             drawerStyle: {
               backgroundColor: '#000000',
               width: 240,
@@ -53,7 +53,7 @@ export default function App() {
           <Drawer.Screen name="Decks" component={DecksScreen} />
           <Drawer.Screen name="Settings" component={SettingsScreen} />
           <Drawer.Screen name="Cards" component={CardsScreen} />
-          <Drawer.Screen name="Player" component={PlayerScreen} />
+          <Drawer.Screen name="Player" component={PlayerScreen}/>
         </Drawer.Navigator>
       </NavigationContainer>
     </SafeAreaProvider>
@@ -66,6 +66,8 @@ function getHeaderTitle(routeName: string): string {
     Clans: 'Clanes',
     Decks: 'Mazos',
     Settings: 'Ajustes',
+    Cards: 'Cartas',
+    Player: 'Jugador'
   };
   return titles[routeName] || routeName;
 }

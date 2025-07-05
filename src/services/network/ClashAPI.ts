@@ -2,6 +2,7 @@ import { ApiService } from './ApiService';
 import { CardsResponse } from '../../models/Card';
 import { Player } from '@/src/models/Player';
 import { BattlePlayerLog } from '@/src/models/BattlePlayerLog';
+import { Locations } from '@/src/models/Location';
 
 export class ClashRoyaleAPI extends ApiService {
   //cards endpoints
@@ -36,6 +37,16 @@ export class ClashRoyaleAPI extends ApiService {
       return this.get<BattlePlayerLog>(`/players/${cleanTag}/battlelog`)
     } catch (error) {
       console.error('Error fetching player battlelog data:', error);
+      throw error;
+    }
+  }
+
+  //location endpoints
+  async getLocations(): Promise<Locations> {
+    try {
+      return this.get<Locations>(`/locations`)
+    } catch (error) {
+      console.error('Error fetching locations data:', error);
       throw error;
     }
   }

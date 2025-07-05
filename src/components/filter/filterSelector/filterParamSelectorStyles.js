@@ -5,11 +5,14 @@ const filterParamSelectorStyles = StyleSheet.create({
     position: 'absolute',
     top: 50,
     right: 10,
-    backgroundColor: 'white',
+    backgroundColor: '#444',
     padding: 10,
     borderRadius: 5,
     elevation: 3,
     zIndex: 100,
+
+    borderWidth: 2,
+    borderColor: 'black',
   },
   paramBox: {
     flexDirection: 'row',
@@ -19,13 +22,16 @@ const filterParamSelectorStyles = StyleSheet.create({
   paramButton: {
     padding: 8,
     margin: 3,
-    backgroundColor: '#ddd',
-    borderRadius: 3,
+    backgroundColor: '#000',
+    borderRadius: 5,
   },
   closeButton: {
+    backgroundColor: '#000',
     marginTop: 10,
     alignSelf: 'center',
     padding: 5,
+    borderRadius: 5,
+    width: '100%'
   },
 });
 

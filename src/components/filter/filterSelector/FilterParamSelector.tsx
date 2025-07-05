@@ -33,12 +33,12 @@ export const FilterParamSelector = ({
               onClose();
             }}
           >
-            <Text>{option}</Text>
+            <Text style={{color: 'white', textAlign:'center'}}>{option}</Text>
           </TouchableOpacity>
         ))}
       </View>
       <TouchableOpacity style={filterParamSelectorStyles.closeButton} onPress={onClose}>
-        <Text>Close</Text>
+        <Text style={{color: 'white', textAlign:'center'}}>Close</Text>
       </TouchableOpacity>
     </View>
   );

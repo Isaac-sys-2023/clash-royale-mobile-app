@@ -38,7 +38,6 @@ const cardsStyles = StyleSheet.create({
     },
     gradientBackground: {
         ...StyleSheet.absoluteFillObject,
-        borderRadius: 10,
     },
     backgroundImage: {
         ...StyleSheet.absoluteFillObject,
@@ -144,7 +143,7 @@ const cardsStyles = StyleSheet.create({
     filterBar: {
         flexDirection: 'row',
         padding: 10,
-        backgroundColor: '#f5f5f5',
+        backgroundColor: '#444',
         alignItems: 'center',
         flexWrap: 'wrap',
     },
@@ -154,9 +153,13 @@ const cardsStyles = StyleSheet.create({
     },
     currentParam: {
         padding: 8,
-        backgroundColor: '#e3f2fd',
         textAlign: 'center',
         fontStyle: 'italic',
+        fontWeight: 'bold',
+    },
+    elixirParam: {
+        color: 'white',
+        backgroundColor: '#ab1ba5',
     },
     centerContainer: {
         flex: 1,

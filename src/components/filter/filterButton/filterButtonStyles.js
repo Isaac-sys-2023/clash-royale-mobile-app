@@ -19,17 +19,17 @@ const filterButtonStyles = StyleSheet.create({
         padding: 10,
         marginHorizontal: 3,
         borderRadius: 5,
-        backgroundColor: '#e0e0e0',
+        backgroundColor: '#444',
     },
     smallButton: {
         padding: 6,
         marginHorizontal: 2,
     },
     activeFilter: {
-        backgroundColor: '#4CAF50',
+        backgroundColor: '#666',
     },
     filterText: {
-        color: '#333',
+        color: '#fff',
     },
     activeFilterText: {
         color: 'white',

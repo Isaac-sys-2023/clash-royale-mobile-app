@@ -210,12 +210,39 @@ const CardsScreen = () => {
                 </View>
             </View>
 
-            {(currentFilter.param && currentFilter.type !== 'cardType') && (
+            {/* {(currentFilter.param && currentFilter.type !== 'cardType') && (
                 <Text style={cardsStyles.currentParam}>
                     {currentFilter.type === 'elixir' && `Elixir: ${currentFilter.param}`}
                     {currentFilter.type === 'rarity' && `Rarity: ${currentFilter.param}`}
                 </Text>
-            )}
+            )} */}
+            {(currentFilter.param && currentFilter.type !== 'cardType') && (
+                <>
+                    {currentFilter.type === 'elixir' && <Text style={[cardsStyles.currentParam, cardsStyles.elixirParam]}>
+                        {`Elixir: ${currentFilter.param}`}
+                    </Text>}
+                    {currentFilter.type === 'rarity' && (
+                        <>
+                            <View>
+                                {currentFilter.param === 'legendary' || currentFilter.param === 'champion' ? (
+                                    <LinearGradient
+                                        colors={RARITY_GRADIENTS[currentFilter.param as keyof typeof RARITY_GRADIENTS].colors}
+                                        start={RARITY_GRADIENTS[currentFilter.param as keyof typeof RARITY_GRADIENTS].start}
+                                        end={RARITY_GRADIENTS[currentFilter.param as keyof typeof RARITY_GRADIENTS].end}
+                                        style={cardsStyles.gradientBackground}
+                                    />
+                                ) : (
+                                    <View style={[cardsStyles.solidBackground, { backgroundColor: RARITY_COLORS[currentFilter.param as keyof typeof RARITY_COLORS] || RARITY_COLORS.default }]} />
+                                )}
+                                <Text style={cardsStyles.currentParam}>
+                                    {`Rarity: ${currentFilter.param}`}
+                                </Text>
+                            </View>
+                        </>
+                    )}
+                </>
+            )
+            }
 
             <FlatList
                 data={[{ key: 'cards' }, { key: 'towerCards' }]}
@@ -227,7 +254,7 @@ const CardsScreen = () => {
                 keyExtractor={(item) => item.key}
                 showsVerticalScrollIndicator={false}
             />
-        </SafeAreaView>
+        </SafeAreaView >
     );
 };
 

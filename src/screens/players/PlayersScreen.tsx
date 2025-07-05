@@ -1,11 +1,12 @@
 import React, { useCallback, useEffect, useState } from 'react';
-import { View, Text, TextInput, TouchableOpacity, StyleSheet, ActivityIndicator, Keyboard } from 'react-native';
+import { View, Text, TextInput, TouchableOpacity, ActivityIndicator, Keyboard, Image, ScrollView } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { StatusBar } from 'expo-status-bar';
 import { MaterialIcons } from '@expo/vector-icons';
 import { PlayersViewModel } from './PlayersViewModel';
 import { Player } from '@/src/models/Player';
 import { BattlePlayerLog } from '@/src/models/BattlePlayerLog';
+import playerStyles from './playersStyles'
 
 interface PlayerScreenProps {
     tag?: string;
@@ -40,9 +41,6 @@ const PlayerScreen = ({ tag }: PlayerScreenProps) => {
             viewModel.setCurrentTag(searchInput);
             await viewModel.searchPlayer();
             setPlayer(viewModel.getPlayer());
-            
-            console.log('Setting battle log:', JSON.stringify(viewModel.getPlayerBattleLog(), null, 2));
-            
             setPlayerBattleLog(viewModel.getPlayerBattleLog());
             setError(viewModel.getError());
         } catch (error) {
@@ -56,273 +54,248 @@ const PlayerScreen = ({ tag }: PlayerScreenProps) => {
     }, [searchInput, viewModel]);
 
     return (
-        <SafeAreaView style={styles.container}>
+        <SafeAreaView style={playerStyles.container}>
             <StatusBar style="light" />
 
-            <View style={styles.searchContainer}>
-                <TextInput
-                    style={styles.searchInput}
-                    placeholder="Ingresa el tag del jugador (ej: RVCQ2CQGJ)"
-                    placeholderTextColor="#999"
-                    value={searchInput}
-                    onChangeText={setSearchInput}
-                    autoCapitalize="none"
-                    autoCorrect={false}
-                    returnKeyType="search"
-                    onSubmitEditing={handleSearch}
-                />
-                <TouchableOpacity
-                    style={styles.searchButton}
-                    onPress={handleSearch}
-                    disabled={isLoading || !searchInput.trim()}
-                >
-                    <MaterialIcons
-                        name="search"
-                        size={24}
-                        color={isLoading || !searchInput.trim() ? "#666" : "#FFF"}
+            <ScrollView
+                style={playerStyles.container}
+                contentContainerStyle={playerStyles.contentContainer}
+                showsVerticalScrollIndicator={false}
+                showsHorizontalScrollIndicator={false}
+            >
+                <View style={playerStyles.searchContainer}>
+                    <TextInput
+                        style={playerStyles.searchInput}
+                        placeholder="Ingresa el tag del jugador (ej: RVCQ2CQGJ)"
+                        placeholderTextColor="#999"
+                        value={searchInput}
+                        onChangeText={setSearchInput}
+                        autoCapitalize="none"
+                        autoCorrect={false}
+                        returnKeyType="search"
+                        onSubmitEditing={handleSearch}
                     />
-                </TouchableOpacity>
-            </View>
-
-            {isLoading && (
-                <View style={styles.centerContainer}>
-                    <ActivityIndicator size="large" color="#FFF" />
-                    <Text style={styles.loadingText}>Buscando jugador...</Text>
+                    <TouchableOpacity
+                        style={playerStyles.searchButton}
+                        onPress={handleSearch}
+                        disabled={isLoading || !searchInput.trim()}
+                    >
+                        <MaterialIcons
+                            name="search"
+                            size={24}
+                            color={isLoading || !searchInput.trim() ? "#666" : "#FFF"}
+                        />
+                    </TouchableOpacity>
                 </View>
-            )}
 
-            {error && !isLoading && (
-                <View style={styles.centerContainer}>
-                    <Text style={styles.errorText}>{error}</Text>
-                </View>
-            )}
+                {isLoading && (
+                    <View style={playerStyles.centerContainer}>
+                        <ActivityIndicator size="large" color="#FFF" />
+                        <Text style={playerStyles.loadingText}>Buscando jugador...</Text>
+                    </View>
+                )}
 
-            {!isLoading && player.tag && (
-                <View style={styles.playerContainer}>
-                    <Text style={styles.playerName}>{player.name}</Text>
-                    <Text style={styles.playerTag}>{player.tag}</Text>
-                    <Text style={styles.playerInfo}>Nivel: {player.expLevel}</Text>
-                    <Text style={styles.playerInfo}>Trofeos: {player.trophies}</Text>
+                {error && !isLoading && (
+                    <View style={playerStyles.centerContainer}>
+                        <Text style={playerStyles.errorText}>{error}</Text>
+                    </View>
+                )}
 
-                    {playerBattleLog.battles.length > 0 && (
-                        <View style={styles.battleLogContainer}>
-                            <Text style={styles.sectionTitle}>Historial de Batallas</Text>
+                {!isLoading && player.tag && (
+                    <View style={playerStyles.playerContainer}>
+                        <Text style={playerStyles.playerName}>{player.name}</Text>
+                        <Text style={playerStyles.playerTag}>{player.tag}</Text>
+                        <Text style={playerStyles.playerInfo}>Nivel: {player.expLevel}</Text>
+                        <Text style={playerStyles.playerInfo}>Trofeos: {player.trophies}</Text>
 
-                            {playerBattleLog.battles.map((battle, index) => (
-                                <View key={`${battle.battleTime}-${index}`} style={styles.battleCard}>
-                                    <View style={styles.battleHeader}>
-                                        <Text style={styles.battleMode}>{battle.gameMode.name}</Text>
-                                        <Text style={styles.battleTime}>
-                                            {new Date(battle.battleTime).toLocaleString()}
-                                        </Text>
+                        <Text style={playerStyles.sectionTitle}>Mazo Bélico:</Text>
+                        <View style={{ flexDirection: 'column' }}>
+                            <View style={{ flexDirection: 'row' }}>
+                                {player.currentDeck.map((card, index) => (
+                                    <View key={index} style={{ flexDirection: 'column', flex: 1, alignItems: 'center' }}>
+                                        <Image
+                                            source={{ uri: (index === 0 || index === 1) && card.iconUrls.evolutionMedium ? card.iconUrls.evolutionMedium : card.iconUrls.medium }}
+                                            style={{
+                                                width: undefined, // Anular el width fijo
+                                                height: 75,
+                                                aspectRatio: 35 / 55, // Mantener relación de aspecto original (35/55)
+                                                marginHorizontal: 1, // Pequeño margen entre cartas (opcional)
+                                                resizeMode: 'contain',
+                                                marginBottom: 0,
+                                            }}
+                                            resizeMode="contain"
+                                        />
+                                        <Text style={{ color: 'white', fontSize: 10, textAlign: 'center', marginTop: -4, }}>Lvl. {card.level ? viewModel.formatLevel(card.level, card.rarity) : ""}</Text>
                                     </View>
+                                ))}
+                            </View>
+                            <View style={{ flexDirection: 'row' }}>
+                                <Image
+                                    source={{ uri: player.currentDeckSupportCards[0].iconUrls.medium }}
+                                    style={{
+                                        flex: 1, // Esto distribuirá el espacio equitativamente
+                                        width: undefined, // Anular el width fijo
+                                        height: 55,
+                                        aspectRatio: 35 / 55, // Mantener relación de aspecto original (35/55)
+                                        marginHorizontal: 1, // Pequeño margen entre cartas (opcional)
+                                        resizeMode: 'contain'
+                                    }}
+                                    resizeMode="contain"
+                                />
+                                <View style={{ flex: 3, flexDirection: 'column', alignItems: 'center', justifyContent: 'center' }}>
+                                    <Text style={{ color: 'white', fontSize: 24, textAlign: 'center' }}>{player.currentDeckSupportCards[0].name}</Text>
+                                    <Text style={{ color: 'white', fontSize: 24, textAlign: 'center' }}>Lvl. {player.currentDeckSupportCards[0].level ? viewModel.formatLevel(player.currentDeckSupportCards[0].level, player.currentDeckSupportCards[0].rarity) : ""}</Text>
+                                </View>
+                            </View>
+                        </View>
 
-                                    <View style={styles.battleTeams}>
-                                        {/* Jugador (team) */}
-                                        <View style={styles.teamContainer}>
-                                            <Text style={styles.teamTitle}>Tú</Text>
-                                            <Text style={styles.playerNameText}>
-                                                {battle.team[0].name} ({battle.team[0].crowns} coronas)
-                                            </Text>
-                                            <Text style={styles.trophyChange}>
-                                                {battle.team[0].trophyChange > 0 ? '+' : ''}
-                                                {battle.team[0].trophyChange} trofeos
+
+                        {playerBattleLog.battles.length > 0 && (
+                            <View style={playerStyles.battleLogContainer}>
+                                <Text style={playerStyles.sectionTitle}>Historial de Batallas</Text>
+
+                                {playerBattleLog.battles.map((battle, index) => (
+                                    <View key={`${battle.battleTime}-${index}`} style={playerStyles.battleCard}>
+                                        <View style={playerStyles.battleHeader}>
+                                            <Text style={playerStyles.battleMode}>{battle.gameMode.name}</Text>
+                                            <Text style={playerStyles.battleTime}>
+                                                {viewModel.formatBattleTime(battle.battleTime)}
                                             </Text>
                                         </View>
 
-                                        {/* VS */}
-                                        <Text style={styles.vsText}>VS</Text>
-
-                                        {/* Oponente */}
-                                        <View style={styles.teamContainer}>
-                                            <Text style={styles.teamTitle}>Oponente</Text>
-                                            <Text style={styles.playerNameText}>
-                                                {battle.opponent[0].name} ({battle.opponent[0].crowns} coronas)
-                                            </Text>
-                                            <Text style={styles.trophyChange}>
-                                                {battle.opponent[0].trophyChange > 0 ? '+' : ''}
-                                                {battle.opponent[0].trophyChange} trofeos
-                                            </Text>
+                                        <View style={{ flexDirection: 'column', justifyContent: 'center', alignItems: 'center' }}>
+                                            <Text style={playerStyles.battleMode}>{battle.team[0].crowns === battle.opponent[0].crowns ? "Empate" : battle.team[0].crowns > battle.opponent[0].crowns ? "Victoria" : "Derrota"}</Text>
+                                            <View style={{ flexDirection: 'row' }}>
+                                                <Image
+                                                    source={require("../../assets/images/crown.webp")}
+                                                    style={{ height: 30, width: 30 }}
+                                                />
+                                                <Text style={[playerStyles.battleMode, {marginHorizontal: 5}]}>{battle.team[0].crowns} - {battle.opponent[0].crowns}</Text>
+                                                <Image
+                                                    source={require("../../assets/images/RedCrown.png")}
+                                                    style={{ height: 27, width: 27 }}
+                                                />
+                                            </View>
+                                            {battle.team[0].trophyChange &&
+                                                <Text style={playerStyles.trophyChange}>
+                                                    {battle.team[0].trophyChange > 0 ? '+' : ''}
+                                                    {battle.team[0].trophyChange} trofeos
+                                                </Text>
+                                            }
                                         </View>
-                                    </View>
 
-                                    {/* Cartas usadas */}
-                                    <View style={styles.cardsContainer}>
-                                        <Text style={styles.cardsTitle}>Tus cartas:</Text>
-                                        <View style={styles.cardsGrid}>
-                                            {battle.team[0].cards.map((card, i) => (
-                                                <View key={`${card.id}-${i}`} style={styles.cardItem}>
-                                                    <Text style={styles.cardName}>{card.name}</Text>
-                                                    <Text style={styles.cardLevel}>Nvl {card.level}</Text>
+
+                                        <View style={[playerStyles.battleTeams]}>
+                                            {/* Jugador (team) */}
+                                            <View style={[playerStyles.teamContainer, { backgroundColor: '#2370b8' }]}>
+                                                <Text style={playerStyles.teamTitle}>Tú</Text>
+                                                <Text style={playerStyles.playerNameText} numberOfLines={1} ellipsizeMode="tail">
+                                                    {battle.team[0].name}
+                                                </Text>
+                                                {/* Cartas usadas */}
+                                                <View style={playerStyles.cardsContainer}>
+                                                    <View style={playerStyles.cardsGrid}>
+                                                        {battle.team[0].cards.map((card, i) => (
+                                                            <View key={`${card.id}-${i}`} style={playerStyles.cardItem}>
+                                                                <Image
+                                                                    source={{ uri: (i === 0 || i === 1) && card.iconUrls.evolutionMedium ? card.iconUrls.evolutionMedium : card.iconUrls.medium }}
+                                                                    style={{
+                                                                        width: '100%',
+                                                                        height: undefined,
+                                                                        aspectRatio: 35 / 55,
+                                                                        marginHorizontal: 1,
+                                                                        resizeMode: 'contain',
+                                                                        marginBottom: 0,
+                                                                    }}
+                                                                    resizeMode="contain"
+                                                                />
+                                                                <Text style={playerStyles.cardLevel}>Lvl {card.level}</Text>
+                                                            </View>
+                                                        ))}
+                                                    </View>
                                                 </View>
-                                            ))}
+                                            </View>
+
+                                            {/* VS */}
+                                            <Text style={playerStyles.vsText}>VS</Text>
+
+                                            {/* Oponente */}
+                                            <View style={[playerStyles.teamContainer, { backgroundColor: '#fd2926' }]}>
+                                                <Text style={playerStyles.teamTitle}>Oponente</Text>
+                                                <Text style={playerStyles.playerNameText} numberOfLines={1} ellipsizeMode="tail">
+                                                    {battle.opponent[0].name}
+                                                </Text>
+                                                {/* Cartas usadas */}
+                                                <View style={playerStyles.cardsContainer}>
+                                                    <View style={playerStyles.cardsGrid}>
+                                                        {battle.opponent[0].cards.map((card, i) => (
+                                                            <View key={`${card.id}-${i}`} style={playerStyles.cardItem}>
+                                                                <Image
+                                                                    source={{ uri: (i === 0 || i === 1) && card.iconUrls.evolutionMedium ? card.iconUrls.evolutionMedium : card.iconUrls.medium }}
+                                                                    style={{
+                                                                        width: '100%',
+                                                                        height: undefined,
+                                                                        aspectRatio: 35 / 55,
+                                                                        marginHorizontal: 1,
+                                                                        resizeMode: 'contain',
+                                                                        marginBottom: 0,
+                                                                    }}
+                                                                    resizeMode="contain"
+                                                                />
+                                                                <Text style={playerStyles.cardLevel}>Nvl {card.level}</Text>
+                                                            </View>
+                                                        ))}
+                                                    </View>
+                                                </View>
+                                            </View>
+                                        </View>
+                                    </View>
+                                ))}
+                            </View>
+                        )}
+
+                        <Text style={playerStyles.sectionTitle}>Medallas:</Text>
+                        <View style={playerStyles.badgeGrid}>
+                            {player.badges.map((b, i) => (
+                                <View key={i} style={{ width: '100%', flexDirection: 'column', backgroundColor: '#444', paddingTop: 10, margin: 5, borderRadius: 10 }}>
+                                    <Text style={[playerStyles.cardsTitle, { textAlign: 'center', padding: 0, margin: 0, }]}>{b.name}</Text>
+                                    <View style={{ flex: 1, flexDirection: 'row', alignItems: 'center', justifyContent: 'center', }}>
+                                        <Image
+                                            source={{ uri: b.iconUrls.large }}
+                                            style={{
+                                                flex: 1, // Esto distribuirá el espacio equitativamente
+                                                width: undefined, // Anular el width fijo
+                                                height: 300,
+                                                aspectRatio: 55 / 55, // Mantener relación de aspecto original (35/55)
+                                                marginHorizontal: 1, // Pequeño margen entre cartas (opcional)
+                                                resizeMode: 'contain',
+                                                marginVertical: 0,
+                                                paddingVertical: 0,
+                                            }}
+                                            resizeMode="contain"
+                                        />
+                                        <View style={{ flex: 1, flexDirection: 'column', alignItems: 'center', justifyContent: 'center', }}>
+                                            {(b.level && b.maxLevel) && <Text style={playerStyles.cardName}>Level: {b.level}/{b.maxLevel}</Text>}
+                                            {b.progress && <Text style={playerStyles.cardName}>Progress: {b.progress}</Text>}
+                                            {b.target && <Text style={playerStyles.cardName}>Target: {b.target}</Text>}
                                         </View>
                                     </View>
                                 </View>
                             ))}
                         </View>
-                    )}
-                </View>
-            )}
+                    </View>
+                )}
 
-            {!isLoading && !player.tag && !error && (
-                <View style={styles.centerContainer}>
-                    <Text style={styles.placeholderText}>
-                        Ingresa un tag de Clash Royale para buscar un jugador
-                    </Text>
-                </View>
-            )}
+                {!isLoading && !player.tag && !error && (
+                    <View style={playerStyles.centerContainer}>
+                        <Text style={playerStyles.placeholderText}>
+                            Ingresa un tag de Clash Royale para buscar un jugador
+                        </Text>
+                    </View>
+                )}
+            </ScrollView>
         </SafeAreaView>
     );
 };
-
-const styles = StyleSheet.create({
-    container: {
-        flex: 1,
-        backgroundColor: '#1A1A1A',
-        padding: 16,
-    },
-    searchContainer: {
-        flexDirection: 'row',
-        marginBottom: 20,
-    },
-    searchInput: {
-        flex: 1,
-        backgroundColor: '#2D2D2D',
-        color: '#FFF',
-        borderRadius: 8,
-        padding: 12,
-        marginRight: 10,
-        fontSize: 16,
-    },
-    searchButton: {
-        backgroundColor: '#4A148C',
-        borderRadius: 8,
-        width: 50,
-        justifyContent: 'center',
-        alignItems: 'center',
-    },
-    centerContainer: {
-        flex: 1,
-        justifyContent: 'center',
-        alignItems: 'center',
-    },
-    loadingText: {
-        color: '#FFF',
-        marginTop: 10,
-        fontSize: 16,
-    },
-    errorText: {
-        color: '#FF5252',
-        fontSize: 16,
-        textAlign: 'center',
-    },
-    placeholderText: {
-        color: '#888',
-        fontSize: 16,
-        textAlign: 'center',
-    },
-    playerContainer: {
-        backgroundColor: '#2D2D2D',
-        borderRadius: 12,
-        padding: 16,
-        marginTop: 16,
-    },
-    playerName: {
-        color: '#FFF',
-        fontSize: 24,
-        fontWeight: 'bold',
-        marginBottom: 4,
-    },
-    playerTag: {
-        color: '#BB86FC',
-        fontSize: 16,
-        marginBottom: 12,
-    },
-    playerInfo: {
-        color: '#FFF',
-        fontSize: 16,
-        marginBottom: 8,
-    },
-
-    battleLogContainer: {
-        marginTop: 20,
-    },
-    sectionTitle: {
-        color: '#BB86FC',
-        fontSize: 18,
-        fontWeight: 'bold',
-        marginBottom: 10,
-    },
-    battleCard: {
-        backgroundColor: '#333',
-        borderRadius: 10,
-        padding: 15,
-        marginBottom: 15,
-    },
-    battleHeader: {
-        flexDirection: 'row',
-        justifyContent: 'space-between',
-        marginBottom: 10,
-    },
-    battleMode: {
-        color: '#FFF',
-        fontWeight: 'bold',
-    },
-    battleTime: {
-        color: '#AAA',
-        fontSize: 12,
-    },
-    battleTeams: {
-        flexDirection: 'row',
-        justifyContent: 'space-between',
-        alignItems: 'center',
-        marginBottom: 10,
-    },
-    teamContainer: {
-        flex: 1,
-    },
-    teamTitle: {
-        color: '#FFF',
-        fontWeight: 'bold',
-    },
-    playerNameText: {
-        color: '#FFF',
-    },
-    trophyChange: {
-        color: '#4CAF50', // Verde para ganancias, podrías cambiar a rojo si es negativo
-    },
-    vsText: {
-        color: '#FFF',
-        fontWeight: 'bold',
-        marginHorizontal: 10,
-    },
-    cardsContainer: {
-        marginTop: 10,
-    },
-    cardsTitle: {
-        color: '#BB86FC',
-        marginBottom: 5,
-    },
-    cardsGrid: {
-        flexDirection: 'row',
-        flexWrap: 'wrap',
-    },
-    cardItem: {
-        backgroundColor: '#444',
-        borderRadius: 5,
-        padding: 5,
-        margin: 3,
-        width: '23%', // Para que quepan 4 por fila
-    },
-    cardName: {
-        color: '#FFF',
-        fontSize: 12,
-    },
-    cardLevel: {
-        color: '#AAA',
-        fontSize: 10,
-    },
-});
 
 export default PlayerScreen;

@@ -149,4 +149,30 @@ export class PlayersViewModel {
     getCurrentTag(): string {
         return this.currentTag;
     }
+
+    formatBattleTime(battleTime: string): string {
+        const year = battleTime.substring(0, 4);
+        const month = battleTime.substring(4, 6);
+        const day = battleTime.substring(6, 8);
+        const time = battleTime.substring(9, 15); // "155749"
+
+        const hours = time.substring(0, 2);
+        const minutes = time.substring(2, 4);
+
+        const isoFormatted = `${year}-${month}-${day} ${hours}:${minutes}`;
+        return isoFormatted;
+    }
+
+    formatLevel(level: number, rarity: string): number {
+        if(rarity === 'rare'){
+            return level + 2;
+        }else if(rarity === 'epic'){
+            return level + 5;
+        }else if(rarity === 'legendary'){
+            return level + 8;
+        }else if(rarity === 'champion'){
+            return level + 10;
+        }
+        return level;
+    }
 }

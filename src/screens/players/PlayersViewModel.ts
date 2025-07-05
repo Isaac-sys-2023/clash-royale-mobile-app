@@ -1,5 +1,5 @@
-import { BattlePlayerLog } from '@/src/models/BattlePlayerLog';
-import { Player } from '../../models/Player';
+import { BattleLog, BattlePlayerLog } from '@/src/models/BattlePlayerLog';
+import { Badge, Player } from '../../models/Player';
 import { PlayerService } from '../../services/PlayerService';
 
 export class PlayersViewModel {
@@ -9,6 +9,11 @@ export class PlayersViewModel {
     private battlelog: BattlePlayerLog = this.createEmptyPlayerBattleLog();
     private isLoading: boolean = false;
     private error: string | null = null;
+
+    private currentBattlePage = 0;
+    private currentBadgePage = 0;
+    private readonly BATTLES_PER_PAGE = 5;
+    private readonly BADGES_PER_PAGE = 10;
 
     constructor(playerService?: PlayerService) {
         this.playerService = playerService || new PlayerService();
@@ -164,15 +169,88 @@ export class PlayersViewModel {
     }
 
     formatLevel(level: number, rarity: string): number {
-        if(rarity === 'rare'){
+        if (rarity === 'rare') {
             return level + 2;
-        }else if(rarity === 'epic'){
+        } else if (rarity === 'epic') {
             return level + 5;
-        }else if(rarity === 'legendary'){
+        } else if (rarity === 'legendary') {
             return level + 8;
-        }else if(rarity === 'champion'){
+        } else if (rarity === 'champion') {
             return level + 10;
         }
         return level;
+    }
+
+    getPaginatedBattles(): BattleLog[] {
+        const start = this.currentBattlePage * this.BATTLES_PER_PAGE;
+        return this.battlelog.battles.slice(start, start + this.BATTLES_PER_PAGE);
+    }
+
+    getPaginatedBadges(): Badge[] {
+        const start = this.currentBadgePage * this.BADGES_PER_PAGE;
+        return this.player.badges.slice(start, start + this.BADGES_PER_PAGE);
+    }
+
+    hasMoreBattles(): boolean {
+        return (this.currentBattlePage + 1) * this.BATTLES_PER_PAGE < this.battlelog.battles.length;
+    }
+
+    hasMoreBadges(): boolean {
+        return (this.currentBadgePage + 1) * this.BADGES_PER_PAGE < this.player.badges.length;
+    }
+
+    loadMoreBattles(): void {
+        if (this.hasMoreBattles()) {
+            this.currentBattlePage++;
+        }
+    }
+
+    loadMoreBadges(): void {
+        if (this.hasMoreBadges()) {
+            this.currentBadgePage++;
+        }
+    }
+
+    hasPrevBattles(): boolean {
+        return this.currentBattlePage > 0;
+    }
+
+    hasPrevBadges(): boolean {
+        return this.currentBadgePage > 0;
+    }
+
+    loadPrevBattles(): void {
+        if (this.hasPrevBattles()) {
+            this.currentBattlePage--;
+        }
+    }
+
+    loadPrevBadges(): void {
+        if (this.hasMoreBadges()) {
+            this.currentBadgePage--;
+        }
+    }
+
+    getCurrentBattleRange(): string {
+        const start = this.currentBattlePage * this.BATTLES_PER_PAGE + 1;
+        const end = Math.min(
+            (this.currentBattlePage + 1) * this.BATTLES_PER_PAGE,
+            this.battlelog.battles.length
+        );
+        return `${start}-${end} de ${this.battlelog.battles.length}`;
+    }
+
+    getCurrentBadgeRange(): string {
+        const start = this.currentBadgePage * this.BADGES_PER_PAGE + 1;
+        const end = Math.min(
+            (this.currentBadgePage + 1) * this.BADGES_PER_PAGE,
+            this.player.badges.length
+        );
+        return `${start}-${end} de ${this.player.badges.length}`;
+    }
+
+    resetPagination(): void {
+        this.currentBattlePage = 0;
+        this.currentBadgePage = 0;
     }
 }

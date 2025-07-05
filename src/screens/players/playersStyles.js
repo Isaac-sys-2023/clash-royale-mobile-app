@@ -174,6 +174,42 @@ const playerStyles = StyleSheet.create({
         margin: 0,
         marginTop: -10,
     },
+    loadMoreButton: {
+        backgroundColor: '#4A148C',
+        padding: 12,
+        borderRadius: 8,
+        alignItems: 'center',
+        marginVertical: 10,
+    },
+    loadMoreText: {
+        color: '#FFF',
+        fontWeight: 'bold',
+    },
+    badgeGrid: {
+        flexDirection: 'row',
+        flexWrap: 'wrap',
+        justifyContent: 'space-between',
+    },
+    paginationControls: {
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        marginVertical: 10,
+    },
+    paginationButton: {
+        backgroundColor: '#4A148C',
+        padding: 10,
+        borderRadius: 5,
+        minWidth: 120,
+        alignItems: 'center',
+    },
+    disabledButton: {
+        backgroundColor: '#2D2D2D',
+        opacity: 0.5,
+    },
+    paginationText: {
+        color: '#FFF',
+        fontWeight: 'bold',
+    },
 });
 
 export default playerStyles;

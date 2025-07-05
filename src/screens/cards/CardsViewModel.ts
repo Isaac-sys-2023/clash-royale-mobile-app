@@ -13,6 +13,7 @@ export class CardsViewModel {
 
   constructor() {
     this.cardService = new CardService();
+    this.loadAllCards();
   }
 
   async loadAllCards(): Promise<void> {

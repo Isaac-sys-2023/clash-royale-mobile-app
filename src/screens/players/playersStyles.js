@@ -190,6 +190,35 @@ const playerStyles = StyleSheet.create({
         margin: 0,
         marginTop: -10,
     },
+
+    allCardsGrid: {
+        flexDirection: 'row',
+        flexWrap: 'wrap',
+        justifyContent: 'center',
+        width: '100%',
+        backgroundColor: '#444',
+        padding: 10
+    },
+    levelSection: {
+        marginBottom: 15,
+    },
+    allCardItem: {
+        borderRadius: 5,
+        width: '12%', // 4 cartas por fila (100%/4 = 25%, pero dejamos 24% para margen)
+        alignItems: 'center',
+    },
+    allCardName: {
+        color: '#FFF',
+        fontSize: 12,
+    },
+    allCardLevel: {
+        color: '#AAA',
+        fontSize: 8,
+        padding: 0,
+        margin: 0,
+        marginTop: -10,
+    },
+
     loadMoreButton: {
         backgroundColor: '#4A148C',
         padding: 12,
@@ -223,6 +252,27 @@ const playerStyles = StyleSheet.create({
         opacity: 0.5,
     },
     paginationText: {
+        color: '#FFF',
+        fontWeight: 'bold',
+    },
+    navbarContainer: {
+        flexDirection: 'row',
+        justifyContent: 'space-around',
+        marginVertical: 10,
+        backgroundColor: '#333',
+        borderRadius: 10,
+        padding: 5,
+    },
+    navbarItem: {
+        padding: 10,
+        borderRadius: 5,
+        flex: 1,
+        alignItems: 'center',
+    },
+    activeNavbarItem: {
+        backgroundColor: '#555',
+    },
+    navbarText: {
         color: '#FFF',
         fontWeight: 'bold',
     },

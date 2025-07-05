@@ -1,6 +1,8 @@
 import { BattleLog, BattlePlayerLog } from '@/src/models/BattlePlayerLog';
 import { Badge, Player } from '../../models/Player';
 import { PlayerService } from '../../services/PlayerService';
+import { Card } from '@/src/models/Card';
+import { CardsViewModel } from '../cards/CardsViewModel';
 
 export class PlayersViewModel {
     private playerService: PlayerService;
@@ -15,8 +17,63 @@ export class PlayersViewModel {
     private readonly BATTLES_PER_PAGE = 5;
     private readonly BADGES_PER_PAGE = 10;
 
-    constructor(playerService?: PlayerService) {
+    private cardsViewModel: CardsViewModel;
+    private allCards: Card[] = [];
+    private allSupportCards: Card[] = [];
+
+    constructor(playerService?: PlayerService, /**/cardsViewModel?: CardsViewModel) {
         this.playerService = playerService || new PlayerService();
+        this.cardsViewModel = cardsViewModel || new CardsViewModel();
+    }
+
+    async loadAllCards(): Promise<void> {
+        await this.cardsViewModel.loadAllCards();
+        this.cardsViewModel.setFilter('all');
+        const { cards, supportCards } = this.cardsViewModel.getFilteredCards();
+        console.log(cards);
+        console.log(supportCards);
+        this.allCards = cards;
+        this.allSupportCards = supportCards;
+    }
+
+    getMissingCards(): { cards: Card[], supportCards: Card[] } {
+        const unlockedCardIds = this.player.cards.map(c => c.id);
+        const unlockedSupportCardIds = this.player.supportCards.map(sc => sc.id);
+
+        const missingCards = this.allCards.filter(card => 
+            !unlockedCardIds.includes(card.id))
+            .map(card => ({ 
+                ...card, 
+                isMissing: true 
+            }));
+
+        const missingSupportCards = this.allSupportCards.filter(supportCard => 
+            !unlockedSupportCardIds.includes(supportCard.id))
+            .map(supportCard => ({
+                ...supportCard,
+                isMissing: true
+            }));
+
+        return {
+            cards: missingCards,
+            supportCards: missingSupportCards
+        };
+    }
+
+    getUnlockStats(): { 
+        cards: { unlocked: number, total: number }, 
+        supportCards: { unlocked: number, total: number } 
+    } {
+        return {
+            cards: {
+                unlocked: this.player.cards.length,
+                total: this.allCards.length
+            },
+            supportCards: {
+                unlocked: this.player.supportCards.length,
+                total: this.allSupportCards.length
+            }
+        };
     }
 
     createEmptyPlayerBattleLog(): BattlePlayerLog {
@@ -123,6 +180,7 @@ export class PlayersViewModel {
         this.error = null;
 
         try {
+            await this.loadAllCards();
             this.player = await this.playerService.getPlayer(this.currentTag);
             this.battlelog = await this.playerService.getBattlePlayerLog(this.currentTag);
         } catch (error) {
@@ -253,4 +311,6 @@ export class PlayersViewModel {
         this.currentBattlePage = 0;
         this.currentBadgePage = 0;
     }
+
+    
 }

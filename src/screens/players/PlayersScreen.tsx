@@ -96,7 +96,7 @@ const PlayerScreen = ({ tag }: PlayerScreenProps) => {
             </View>
 
             <View style={{ flexDirection: 'column', justifyContent: 'center', alignItems: 'center' }}>
-                <Text style={playerStyles.battleMode}>{battle.team[0].crowns === battle.opponent[0].crowns ? "Empate" : battle.team[0].crowns > battle.opponent[0].crowns ? "Victoria" : "Derrota"}</Text>
+                <Text style={playerStyles.battleMode}>{battle.team[0].crowns === battle.opponent[0].crowns ? "Draw" : battle.team[0].crowns > battle.opponent[0].crowns ? "Win" : "Loss"}</Text>
                 <View style={{ flexDirection: 'row' }}>
                     <Image
                         source={require("../../assets/images/crown.webp")}
@@ -111,7 +111,7 @@ const PlayerScreen = ({ tag }: PlayerScreenProps) => {
                 {battle.team[0].trophyChange &&
                     <Text style={playerStyles.trophyChange}>
                         {battle.team[0].trophyChange > 0 ? '+' : ''}
-                        {battle.team[0].trophyChange} trofeos
+                        {battle.team[0].trophyChange} trophies
                     </Text>
                 }
             </View>
@@ -120,7 +120,6 @@ const PlayerScreen = ({ tag }: PlayerScreenProps) => {
             <View style={[playerStyles.battleTeams]}>
                 {/* Jugador (team) */}
                 <View style={[playerStyles.teamContainer, { backgroundColor: '#2370b8' }]}>
-                    <Text style={playerStyles.teamTitle}>Tú</Text>
                     <Text style={playerStyles.playerNameText} numberOfLines={1} ellipsizeMode="tail">
                         {battle.team[0].name}
                     </Text>
@@ -153,7 +152,6 @@ const PlayerScreen = ({ tag }: PlayerScreenProps) => {
 
                 {/* Oponente */}
                 <View style={[playerStyles.teamContainer, { backgroundColor: '#fd2926' }]}>
-                    <Text style={playerStyles.teamTitle}>Oponente</Text>
                     <Text style={playerStyles.playerNameText} numberOfLines={1} ellipsizeMode="tail">
                         {battle.opponent[0].name}
                     </Text>
@@ -174,7 +172,7 @@ const PlayerScreen = ({ tag }: PlayerScreenProps) => {
                                         }}
                                         resizeMode="contain"
                                     />
-                                    <Text style={playerStyles.cardLevel}>Nvl {card.level}</Text>
+                                    <Text style={playerStyles.cardLevel}>Lvl {card.level}</Text>
                                 </View>
                             ))}
                         </View>
@@ -250,7 +248,7 @@ const PlayerScreen = ({ tag }: PlayerScreenProps) => {
                 {isLoading && (
                     <View style={playerStyles.centerContainer}>
                         <ActivityIndicator size="large" color="#FFF" />
-                        <Text style={playerStyles.loadingText}>Buscando jugador...</Text>
+                        <Text style={playerStyles.loadingText}>Searching for player...</Text>
                     </View>
                 )}
 
@@ -264,10 +262,10 @@ const PlayerScreen = ({ tag }: PlayerScreenProps) => {
                     <View style={playerStyles.playerContainer}>
                         <Text style={playerStyles.playerName}>{player.name}</Text>
                         <Text style={playerStyles.playerTag}>{player.tag}</Text>
-                        <Text style={playerStyles.playerInfo}>Nivel: {player.expLevel}</Text>
-                        <Text style={playerStyles.playerInfo}>Trofeos: {player.trophies}</Text>
+                        <Text style={playerStyles.playerInfo}>Level: {player.expLevel}</Text>
+                        <Text style={playerStyles.playerInfo}>Trophies: {player.trophies}</Text>
 
-                        <Text style={playerStyles.sectionTitle}>Mazo Bélico:</Text>
+                        <Text style={playerStyles.sectionTitle}>Battle Deck:</Text>
                         <View style={{ flexDirection: 'column' }}>
                             <View style={{ flexDirection: 'row' }}>
                                 {player.currentDeck.map((card, index) => (
@@ -310,7 +308,7 @@ const PlayerScreen = ({ tag }: PlayerScreenProps) => {
 
                         {playerBattleLog.battles.length > 0 && (
                             <View style={playerStyles.battleLogContainer}>
-                                <Text style={playerStyles.sectionTitle}>Historial de Batallas {viewModel.getCurrentBattleRange()}</Text>
+                                <Text style={playerStyles.sectionTitle}>Battles {viewModel.getCurrentBattleRange()}</Text>
                                 {displayedBattles.map((battle, index) => (
                                     <BattleCard key={`${battle.battleTime}-${index}`} battle={battle} />
                                 ))}
@@ -323,7 +321,7 @@ const PlayerScreen = ({ tag }: PlayerScreenProps) => {
                                         onPress={loadPrevBattles}
                                         disabled={!viewModel.hasPrevBattles()}
                                     >
-                                        <Text style={playerStyles.paginationText}>Anteriores</Text>
+                                        <Text style={playerStyles.paginationText}>Previous</Text>
                                     </TouchableOpacity>
 
                                     <TouchableOpacity
@@ -334,13 +332,13 @@ const PlayerScreen = ({ tag }: PlayerScreenProps) => {
                                         onPress={loadMoreBattles}
                                         disabled={!viewModel.hasMoreBattles()}
                                     >
-                                        <Text style={playerStyles.paginationText}>Siguientes</Text>
+                                        <Text style={playerStyles.paginationText}>Next</Text>
                                     </TouchableOpacity>
                                 </View>
                             </View>
                         )}
 
-                        <Text style={playerStyles.sectionTitle}>Medallas {viewModel.getCurrentBadgeRange()}</Text>
+                        <Text style={playerStyles.sectionTitle}>Achievement Badges {viewModel.getCurrentBadgeRange()}</Text>
                         <View style={playerStyles.badgeGrid}>
                             {displayedBadges.map((badge, index) => (
                                 <BadgeItem key={`${badge.name}-${index}`} badge={badge} />
@@ -354,7 +352,7 @@ const PlayerScreen = ({ tag }: PlayerScreenProps) => {
                                     onPress={loadPrevBadges}
                                     disabled={!viewModel.hasPrevBadges()}
                                 >
-                                    <Text style={playerStyles.paginationText}>Anteriores</Text>
+                                    <Text style={playerStyles.paginationText}>Previous</Text>
                                 </TouchableOpacity>
 
                                 <TouchableOpacity
@@ -365,7 +363,7 @@ const PlayerScreen = ({ tag }: PlayerScreenProps) => {
                                     onPress={loadMoreBadges}
                                     disabled={!viewModel.hasMoreBadges()}
                                 >
-                                    <Text style={playerStyles.paginationText}>Siguientes</Text>
+                                    <Text style={playerStyles.paginationText}>Next</Text>
                                 </TouchableOpacity>
                             </View>
                         </View>
@@ -375,7 +373,7 @@ const PlayerScreen = ({ tag }: PlayerScreenProps) => {
                 {!isLoading && !player.tag && !error && (
                     <View style={playerStyles.centerContainer}>
                         <Text style={playerStyles.placeholderText}>
-                            Ingresa un tag de Clash Royale para buscar un jugador
+                            Enter a Clash Royale tag to search for a player
                         </Text>
                     </View>
                 )}

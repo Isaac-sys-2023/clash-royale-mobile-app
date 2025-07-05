@@ -158,6 +158,17 @@ const cardsStyles = StyleSheet.create({
         textAlign: 'center',
         fontStyle: 'italic',
     },
+    centerContainer: {
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center',
+        backgroundColor: 'black'
+    },
+    loadingText: {
+        color: '#FFF',
+        marginTop: 10,
+        fontSize: 16,
+    },
 });
 
 export default cardsStyles

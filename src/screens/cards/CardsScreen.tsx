@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, FlatList, Image, StatusBar, ColorValue, TouchableOpacity } from 'react-native';
+import { View, Text, FlatList, Image, StatusBar, ColorValue, TouchableOpacity, ActivityIndicator } from 'react-native';
 import { CardsViewModel } from './CardsViewModel';
 import { Card } from '../../models/Card';
 import { SafeAreaView } from 'react-native-safe-area-context';
@@ -171,7 +171,12 @@ const CardsScreen = () => {
     };
 
     if (isLoading) {
-        return <Text style={{ color: 'black' }}>Loading cards...</Text>;
+        return (
+            <View style={cardsStyles.centerContainer}>
+                <ActivityIndicator size="large" color="#FFF" />
+                <Text style={cardsStyles.loadingText}>Loading cards...</Text>
+            </View>
+        );
     }
 
     return (
@@ -194,14 +199,14 @@ const CardsScreen = () => {
             />
 
             <View style={cardsStyles.filterBar}>
-                <FilterButton label="All" active={currentFilter.type === 'all'} onPress={() => {handleFilterPress('all'); setShowParamSelector({ visible: false, type: null })}}/>
-                <FilterButton label="Evo" active={currentFilter.type === 'evo'} onPress={() => {handleFilterPress('evo'); setShowParamSelector({ visible: false, type: null })}}/>
-                <FilterButton label="Elixir" active={currentFilter.type === 'elixir'} onPress={() => handleFilterPress('elixir')}/>
+                <FilterButton label="All" active={currentFilter.type === 'all'} onPress={() => { handleFilterPress('all'); setShowParamSelector({ visible: false, type: null }) }} />
+                <FilterButton label="Evo" active={currentFilter.type === 'evo'} onPress={() => { handleFilterPress('evo'); setShowParamSelector({ visible: false, type: null }) }} />
+                <FilterButton label="Elixir" active={currentFilter.type === 'elixir'} onPress={() => handleFilterPress('elixir')} />
                 <FilterButton label="Rarity" active={currentFilter.type === 'rarity'} onPress={() => handleFilterPress('rarity')} />
 
                 <View style={cardsStyles.typeFilters}>
-                    <FilterButton label="Cards" active={currentFilter.type === 'cardType' && currentFilter.param === 'card'} onPress={() => {handleFilterPress('cardType', 'card'); setShowParamSelector({ visible: false, type: null })}} small/>
-                    <FilterButton label="Towers" active={currentFilter.type === 'cardType' && currentFilter.param === 'support'} onPress={() => {handleFilterPress('cardType', 'support'); setShowParamSelector({ visible: false, type: null })}} small/>
+                    <FilterButton label="Cards" active={currentFilter.type === 'cardType' && currentFilter.param === 'card'} onPress={() => { handleFilterPress('cardType', 'card'); setShowParamSelector({ visible: false, type: null }) }} small />
+                    <FilterButton label="Towers" active={currentFilter.type === 'cardType' && currentFilter.param === 'support'} onPress={() => { handleFilterPress('cardType', 'support'); setShowParamSelector({ visible: false, type: null }) }} small />
                 </View>
             </View>
 

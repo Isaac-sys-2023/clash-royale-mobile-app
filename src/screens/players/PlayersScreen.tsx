@@ -262,8 +262,64 @@ const PlayerScreen = ({ tag }: PlayerScreenProps) => {
                     <View style={playerStyles.playerContainer}>
                         <Text style={playerStyles.playerName}>{player.name}</Text>
                         <Text style={playerStyles.playerTag}>{player.tag}</Text>
-                        <Text style={playerStyles.playerInfo}>Level: {player.expLevel}</Text>
-                        <Text style={playerStyles.playerInfo}>Trophies: {player.trophies}</Text>
+
+                        <View style={{ flexDirection: 'row', alignItems: 'center', marginBottom: 8 }}>
+                            <Image
+                                source={
+                                    require('../../assets/images/XP.webp')
+                                }
+                                style={{
+                                    width: 24,
+                                    height: undefined,
+                                    aspectRatio: 26 / 23,
+                                    marginRight: 5,
+                                }}
+                            />
+                            <Text style={playerStyles.playerInfo}>Level: {player.expLevel}</Text>
+                        </View>
+                        <View style={{ flexDirection: 'row', alignItems: 'center', marginBottom: 8 }}>
+                            <Image
+                                source={
+                                    require('../../assets/images/rating.png')
+                                }
+                                style={{
+                                    width: 24,
+                                    height: undefined,
+                                    aspectRatio: 48 / 64,
+                                    marginRight: 5,
+                                }}
+                            />
+                            <Text style={[playerStyles.playerInfo]}>{player.currentPathOfLegendSeasonResult.trophies}  {player.currentPathOfLegendSeasonResult.rank !== null && <>Rank: {player.currentPathOfLegendSeasonResult.rank}</>}</Text>
+                        </View>
+                        <View style={{ flexDirection: 'row', alignItems: 'center', marginBottom: 8 }}>
+                            <Image
+                                source={
+                                    require('../../assets/images/trophy.png')
+                                }
+                                style={{
+                                    width: 24,
+                                    height: 24,
+                                    marginRight: 5,
+                                }}
+                            />
+                            <Text style={[playerStyles.playerInfo]}>{player.trophies}/{player.bestTrophies} {player.arena.name}</Text>
+                        </View>
+                        <View style={{ flexDirection: 'row', alignItems: 'center', marginBottom: 8 }}>
+                            <Text style={[playerStyles.playerInfo]}>Current Favorite Card: </Text>
+                            <Image
+                                source={{ uri: player.currentFavouriteCard.iconUrls.medium }}
+                                style={{
+                                    width: undefined, // Anular el width fijo
+                                    height: 75,
+                                    aspectRatio: 35 / 55, // Mantener relación de aspecto original (35/55)
+                                    marginHorizontal: 1, // Pequeño margen entre cartas (opcional)
+                                    resizeMode: 'contain',
+                                    marginBottom: 0,
+                                }}
+                                resizeMode="contain"
+                            />
+                        </View>
+
 
                         <Text style={playerStyles.sectionTitle}>Battle Deck:</Text>
                         <View style={{ flexDirection: 'column' }}>
@@ -343,7 +399,7 @@ const PlayerScreen = ({ tag }: PlayerScreenProps) => {
                             {displayedBadges.map((badge, index) => (
                                 <BadgeItem key={`${badge.name}-${index}`} badge={badge} />
                             ))}
-                            <View style={[playerStyles.paginationControls, {width: '100%'}]}>
+                            <View style={[playerStyles.paginationControls, { width: '100%' }]}>
                                 <TouchableOpacity
                                     style={[
                                         playerStyles.paginationButton,
@@ -367,6 +423,161 @@ const PlayerScreen = ({ tag }: PlayerScreenProps) => {
                                 </TouchableOpacity>
                             </View>
                         </View>
+
+                        <Text style={playerStyles.sectionTitle}>Stats</Text>
+                        <View style={{
+                            backgroundColor: "#444",
+                            borderRadius: 10,
+                            padding: 10,
+                            marginBottom: 5
+                        }}>
+                            <Text style={[playerStyles.sectionSubTitle]}>Path of Legends Stats</Text>
+                            <View style={{
+                                backgroundColor: "#666",
+                                borderRadius: 10,
+                                padding: 10,
+                                marginBottom: 5
+                            }}>
+                                <Text style={playerStyles.sectionSubSubTitle}>Best Season</Text>
+                                <View>
+                                    <Text style={playerStyles.sectionText}>Rank: {player.bestPathOfLegendSeasonResult.rank == null ? "Unranked" : player.bestPathOfLegendSeasonResult.rank}</Text>
+                                    <Text style={playerStyles.sectionText}>League: {!player.bestPathOfLegendSeasonResult.leagueNumber ? "Not League" : player.bestPathOfLegendSeasonResult.leagueNumber}</Text>
+                                    {player.bestPathOfLegendSeasonResult.trophies > 0 && <Text style={playerStyles.sectionText}>Rattings: {player.bestPathOfLegendSeasonResult.trophies}</Text>}
+                                </View>
+                            </View>
+
+                            <View style={{
+                                backgroundColor: "#666",
+                                borderRadius: 10,
+                                padding: 10,
+                                marginBottom: 5
+                            }}>
+                                <Text style={playerStyles.sectionSubSubTitle}>Current Season</Text>
+                                <View>
+                                    <Text style={playerStyles.sectionText}>Rank: {player.currentPathOfLegendSeasonResult.rank == null ? "Unranked" : player.currentPathOfLegendSeasonResult.rank}</Text>
+                                    <Text style={playerStyles.sectionText}>League: {!player.currentPathOfLegendSeasonResult.leagueNumber ? "Not League" : player.currentPathOfLegendSeasonResult.leagueNumber}</Text>
+                                    {player.currentPathOfLegendSeasonResult.trophies > 0 && <Text style={playerStyles.sectionText}>Rattings: {player.currentPathOfLegendSeasonResult.trophies}</Text>}
+                                </View>
+                            </View>
+
+                            <View style={{
+                                backgroundColor: "#666",
+                                borderRadius: 10,
+                                padding: 10,
+                                marginBottom: 5
+                            }}>
+                                <Text style={playerStyles.sectionSubSubTitle}>Last Season</Text>
+                                <View>
+                                    <Text style={playerStyles.sectionText}>Rank: {player.lastPathOfLegendSeasonResult.rank == null ? "Unranked" : player.lastPathOfLegendSeasonResult.rank}</Text>
+                                    <Text style={playerStyles.sectionText}>League: {!player.lastPathOfLegendSeasonResult.leagueNumber ? "Not League" : player.lastPathOfLegendSeasonResult.leagueNumber}</Text>
+                                    {player.lastPathOfLegendSeasonResult.trophies > 0 && <Text style={playerStyles.sectionText}>Rattings: {player.lastPathOfLegendSeasonResult.trophies}</Text>}
+                                </View>
+                            </View>
+
+                            {player.leagueStatistics.bestSeason.trophies > 0 && <View style={{
+                                backgroundColor: "#666",
+                                borderRadius: 10,
+                                padding: 10,
+                                marginBottom: 5
+                            }}>
+                                <Text style={playerStyles.sectionSubSubTitle}>Best Legacy Ladder Season</Text>
+                                <View>
+                                    <Text style={playerStyles.sectionText}>Rank: {player.leagueStatistics.bestSeason.rank == null ? "Unranked" : player.lastPathOfLegendSeasonResult.rank}</Text>
+                                    <Text style={playerStyles.sectionText}>Trophies: {player.leagueStatistics.bestSeason.trophies}</Text>
+                                </View>
+                            </View>}
+                        </View>
+
+
+                        <View style={{
+                            backgroundColor: "#444",
+                            borderRadius: 10,
+                            padding: 10,
+                            marginBottom: 5
+                        }}>
+                            <Text style={[playerStyles.sectionSubTitle]}>Battle Stats</Text>
+                            <View style={{
+                                backgroundColor: "#666",
+                                borderRadius: 10,
+                                padding: 10,
+                                marginBottom: 5
+                            }}>
+                                <Text style={playerStyles.sectionSubSubTitle}>Clan Wars</Text>
+                                <View>
+                                    <Text style={playerStyles.sectionText}>Clan Cards Collected: {player.clanCardsCollected}</Text>
+                                    <Text style={playerStyles.sectionText}>War Day Wins: {player.warDayWins}</Text>
+                                </View>
+                            </View>
+
+                            <View style={{
+                                backgroundColor: "#666",
+                                borderRadius: 10,
+                                padding: 10,
+                                marginBottom: 5
+                            }}>
+                                <Text style={playerStyles.sectionSubSubTitle}>Games</Text>
+                                <View>
+                                    <Text style={playerStyles.sectionText}>Wins: {player.wins} - {((player.wins / player.battleCount) * 100).toFixed(2)}% de victoria</Text>
+                                    <Text style={playerStyles.sectionText}>Losses: {player.losses} - {((player.losses / player.battleCount) * 100).toFixed(2)}%  de derrota</Text>
+                                    <Text style={playerStyles.sectionText}>Total Games: {player.battleCount}</Text>
+                                    <Text style={playerStyles.sectionText}>Three crown wins: {player.threeCrownWins}</Text>
+                                </View>
+                            </View>
+                        </View>
+
+                        <View style={{
+                            backgroundColor: "#444",
+                            borderRadius: 10,
+                            padding: 10,
+                            marginBottom: 5
+                        }}>
+                            <Text style={[playerStyles.sectionSubTitle]}>Challenge Stats</Text>
+                            <View style={{
+                                backgroundColor: "#666",
+                                borderRadius: 10,
+                                padding: 10,
+                                marginBottom: 5
+                            }}>
+                                <Text style={playerStyles.sectionSubSubTitle}>Challenges</Text>
+                                <View>
+                                    <Text style={playerStyles.sectionText}>Max wins: {player.challengeMaxWins}</Text>
+                                    <Text style={playerStyles.sectionText}>Cards Won: {player.challengeCardsWon}</Text>
+                                    <Text style={playerStyles.sectionText}>Grand Challenge 12-wins: {player.badges.find(badge => badge.name === "Grand12Wins")?.progress || 0}</Text>
+                                </View>
+                            </View>
+
+                            <View style={{
+                                backgroundColor: "#666",
+                                borderRadius: 10,
+                                padding: 10,
+                                marginBottom: 5
+                            }}>
+                                <Text style={playerStyles.sectionSubSubTitle}>Tournaments</Text>
+                                <View>
+                                    <Text style={playerStyles.sectionText}>Total Games: {player.tournamentBattleCount}</Text>
+                                    <Text style={playerStyles.sectionText}>Cards Won: {player.tournamentCardsWon}</Text>
+                                </View>
+                            </View>
+                        </View>
+
+                        <View style={{
+                            backgroundColor: "#444",
+                            borderRadius: 10,
+                            padding: 10,
+                            marginBottom: 5
+                        }}>
+                            <Text style={[playerStyles.sectionSubTitle]}>Misc Stats</Text>
+                            <View style={{
+                                backgroundColor: "#666",
+                                borderRadius: 10,
+                                padding: 10,
+                                marginBottom: 5
+                            }}>
+                                <Text style={playerStyles.sectionText}>Experience: {player.expLevel}</Text>
+                                <Text style={playerStyles.sectionText}>Total donations: {player.totalDonations}</Text>
+                                <Text style={playerStyles.sectionText}>Star points: {player.starPoints}</Text>
+                            </View>
+                        </View>
                     </View>
                 )}
 
@@ -378,7 +589,7 @@ const PlayerScreen = ({ tag }: PlayerScreenProps) => {
                     </View>
                 )}
             </ScrollView>
-        </SafeAreaView>
+        </SafeAreaView >
     );
 };
 

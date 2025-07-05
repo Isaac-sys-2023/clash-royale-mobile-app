@@ -73,7 +73,6 @@ const playerStyles = StyleSheet.create({
     playerInfo: {
         color: '#FFF',
         fontSize: 16,
-        marginBottom: 8,
     },
 
     battleLogContainer: {
@@ -83,6 +82,23 @@ const playerStyles = StyleSheet.create({
         color: '#BB86FC',
         fontSize: 18,
         fontWeight: 'bold',
+        marginBottom: 10,
+    },
+    sectionSubTitle: {
+        color: '#BB86FC',
+        fontSize: 16,
+        fontWeight: 'bold',
+        marginBottom: 10,
+    },
+    sectionSubSubTitle: {
+        color: '#FFF',
+        fontSize: 14,
+        fontWeight: 'bold',
+        marginBottom: 10,
+    },
+    sectionText: {
+        color: '#FFF',
+        fontSize: 12,
         marginBottom: 10,
     },
     battleCard: {

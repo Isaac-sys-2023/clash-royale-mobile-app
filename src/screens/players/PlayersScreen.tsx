@@ -626,7 +626,10 @@ const PlayerScreen = ({ tag }: PlayerScreenProps) => {
                                             const cardsAtLevel = player.cards.filter(c =>
                                                 c.level && viewModel.formatLevel(c.level, c.rarity) === currentLevel
                                             );
-                                            if (cardsAtLevel.length === 0) return null;
+                                            const supportCardsAtLevel = player.supportCards.filter(c =>
+                                                c.level && viewModel.formatLevel(c.level, c.rarity) === currentLevel
+                                            );
+                                            if (cardsAtLevel.length === 0 && supportCardsAtLevel.length === 0) return null;
                                             return (
                                                 <View key={`level-${currentLevel}`} style={playerStyles.levelSection}>
                                                     <Text style={playerStyles.sectionSubTitle}>Level {currentLevel} Cards ({cardsAtLevel.length})</Text>
@@ -668,12 +671,29 @@ const PlayerScreen = ({ tag }: PlayerScreenProps) => {
                                                                 </View> */}
                                                             </View>
                                                         ))}
+                                                        {supportCardsAtLevel.map((card, i) => (
+                                                            <View key={`${card.id}-${i}`} style={playerStyles.allCardItem}>
+                                                                <Image
+                                                                    source={{
+                                                                        uri: card.iconUrls.medium
+                                                                    }}
+                                                                    style={{
+                                                                        width: '100%',
+                                                                        height: undefined,
+                                                                        aspectRatio: 35 / 55,
+                                                                        marginHorizontal: 1,
+                                                                        resizeMode: 'contain',
+                                                                        marginBottom: 0,
+                                                                    }}
+                                                                    resizeMode="contain"
+                                                                />
+                                                            </View>
+                                                        ))}
                                                     </View>
                                                 </View>
                                             );
                                         })}
 
-                                        {/*Cartas no desbloqueadas*/}
                                         <Text style={playerStyles.sectionSubTitle}>Locked Cards</Text>
                                         <View style={playerStyles.allCardsGrid}>
                                             {missingCards.cards.map((card, i) => (
@@ -687,7 +707,23 @@ const PlayerScreen = ({ tag }: PlayerScreenProps) => {
                                                             marginHorizontal: 1,
                                                             resizeMode: 'contain',
                                                             marginBottom: 0,
-                                                            //tintColor: '#888',
+                                                            opacity: 0.3
+                                                        }}
+                                                        resizeMode="contain"
+                                                    />
+                                                </View>
+                                            ))}
+                                            {missingCards.supportCards.map((card, i) => (
+                                                <View key={`${card.id}-${i}`} style={playerStyles.allCardItem}>
+                                                    <Image
+                                                        source={{ uri: (i === 0 || i === 1) && card.iconUrls.evolutionMedium ? card.iconUrls.evolutionMedium : card.iconUrls.medium }}
+                                                        style={{
+                                                            width: '100%',
+                                                            height: undefined,
+                                                            aspectRatio: 35 / 55,
+                                                            marginHorizontal: 1,
+                                                            resizeMode: 'contain',
+                                                            marginBottom: 0,
                                                             opacity: 0.3
                                                         }}
                                                         resizeMode="contain"

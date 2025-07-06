@@ -1,4 +1,5 @@
 import { Arena } from "./Player";
+import { Location } from "./Location"
 
 // /clan/{tag}/members
 export interface Member {
@@ -16,7 +17,7 @@ export interface Member {
     clanChestPoints: number;
 }
 
-export interface Members{
+export interface Members {
     items: Member[];
 }
 
@@ -38,9 +39,9 @@ export interface Clan {
     members: number;
     memberList: Member[];
     clanChestPoints?: number;
-    badgeUrls?:{};
+    badgeUrls?: {};
 }
 
-export interface Clans{
+export interface Clans {
     items: Clan[]
 }

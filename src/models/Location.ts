@@ -1,6 +1,6 @@
 export interface Location {
-    id: number,
-    name: string,
+    id: number;
+    name: string;
     isCountry: boolean;
     countryCode?: string;
     localizedName?:string;

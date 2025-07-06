@@ -1,8 +1,8 @@
-import { Clan, Clans } from '../models/Clan';
+import { Clan, Clans, Members } from '../models/Clan';
 import { CurrentRiverRace, War } from '../models/RiverRaceLog';
 import { ClashRoyaleAPI } from './network/ClashAPI';
 
-export class PlayerService {
+export class ClanService {
     private api: ClashRoyaleAPI;
 
     constructor() {
@@ -17,7 +17,7 @@ export class PlayerService {
         return await this.api.getClans(name, locationId, minMembers, maxMembers, minScore, limit);
     }
 
-    async getClanMembers(clanTag: string): Promise<Clan> {
+    async getClanMembers(clanTag: string): Promise<Members> {
         return await this.api.getClanMembers(clanTag);
     }
 

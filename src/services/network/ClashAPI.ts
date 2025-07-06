@@ -3,7 +3,7 @@ import { CardsResponse } from '../../models/Card';
 import { Player } from '@/src/models/Player';
 import { BattlePlayerLog } from '@/src/models/BattlePlayerLog';
 import { Locations } from '@/src/models/Location';
-import { Clan, Clans } from '@/src/models/Clan';
+import { Clan, Clans, Members } from '@/src/models/Clan';
 import { CurrentRiverRace, War } from '@/src/models/RiverRaceLog';
 
 export class ClashRoyaleAPI extends ApiService {
@@ -87,7 +87,7 @@ export class ClashRoyaleAPI extends ApiService {
     }
   }
 
-  async getClanMembers(clanTag: string): Promise<Clan> {
+  async getClanMembers(clanTag: string): Promise<Members> {
     try {
       const cleanTag = clanTag.replace('#', '');
 
@@ -95,7 +95,7 @@ export class ClashRoyaleAPI extends ApiService {
         throw new Error('El tag del clan no puede estar vacío');
       }
 
-      return this.get<Clan>(`/clans/${cleanTag}/members`)
+      return this.get<Members>(`/clans/${cleanTag}/members`)
     } catch (error) {
       console.error('Error fetching clan members data:', error);
       throw error;

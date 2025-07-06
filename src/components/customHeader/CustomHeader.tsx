@@ -5,25 +5,27 @@ import { StatusBar } from 'react-native';
 
 interface CustomHeaderProps {
   title: string;
+  onLogoPress: () => void;
   onSettingsPress: () => void;
   onMenuPress: () => void;
 }
 
 export const CustomHeader: React.FC<CustomHeaderProps> = ({ 
   title, 
+  onLogoPress,
   onSettingsPress,
   onMenuPress
 }) => {
   return (
     <View style={[customHeaderStyles.container, {paddingTop: StatusBar.currentHeight}]}>
       <View style={customHeaderStyles.leftSection}>
-        <View style={customHeaderStyles.logoContainer}>
+        <TouchableOpacity style={customHeaderStyles.logoContainer} onPress={onLogoPress}>
           <Image
             source={{ uri: 'https://cdn.royaleapi.com/static/img/branding/royaleapi-logo-128.png' }}
             style={customHeaderStyles.logo}
           />
-          <Text style={customHeaderStyles.logoText}>Royale API Mobile</Text>
-        </View>
+          <Text style={customHeaderStyles.logoText}>Info Royale</Text>
+        </TouchableOpacity>
       </View>
 
       <View style={customHeaderStyles.centerSection}>

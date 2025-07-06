@@ -36,6 +36,7 @@ export default function App() {
             header: () => (
               <CustomHeader
                 title={getHeaderTitle(route.name)}
+                onLogoPress={() => navigation.navigate('Home')}
                 onSettingsPress={() => navigation.navigate('Settings')}
                 onMenuPress={() => navigation.openDrawer()}
               />

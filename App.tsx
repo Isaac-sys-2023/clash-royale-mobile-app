@@ -30,7 +30,7 @@ export default function App() {
       <NavigationContainer>
         <Drawer.Navigator
           initialRouteName="Home"
-          drawerContent={(props) => <DrawerContent {...props} />}
+          drawerContent={(props) => <DrawerContent {...props}/>}
           screenOptions={({ route, navigation }) => ({
             headerShown: true,
             header: () => (

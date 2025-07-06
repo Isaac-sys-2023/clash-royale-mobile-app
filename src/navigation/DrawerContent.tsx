@@ -1,9 +1,10 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
 import { DrawerViewModel } from './DrawerViewModel';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 import { TextStyle } from 'react-native';
+import { useNavigationState, useRoute } from '@react-navigation/native';
 
 interface DrawerContentProps {
     navigation: any;
@@ -12,7 +13,14 @@ interface DrawerContentProps {
 const DrawerContent: React.FC<DrawerContentProps> = ({
     navigation
 }) => {
-    const [currentRoute, setCurrentRoute] = useState('Home');
+    const state = useNavigationState(state => state);
+    
+    const [currentRoute, setCurrentRoute] = useState(state?.routeNames[state.index] || 'Home');
+    useEffect(() => {
+        if (state) {
+            setCurrentRoute(state.routeNames[state.index]);
+        }
+    }, [state]);
 
     const viewModel = new DrawerViewModel(navigation, currentRoute, setCurrentRoute);
 

@@ -5,7 +5,7 @@ import 'react-native-gesture-handler';
 
 import HomeScreen from "./src/screens/home/HomeScreen";
 import ClansScreen from "./src/screens/clans/ClansScreen";
-import DecksScreen from "./src/screens/decks/DecksScreen";
+import PlayerLeaderboardScreen from "./src/screens/leaderboardPlayer/PlayerLeaderboardScreen";
 import SettingsScreen from "./src/screens/settings/SettingsScreen";
 
 import { CustomHeader } from "./src/components/customHeader/CustomHeader";
@@ -51,7 +51,7 @@ export default function App() {
         >
           <Drawer.Screen name="Home" component={HomeScreen} />
           <Drawer.Screen name="Clans" component={ClansScreen} />
-          <Drawer.Screen name="Decks" component={DecksScreen} />
+          <Drawer.Screen name="Leaderboard" component={PlayerLeaderboardScreen} />
           <Drawer.Screen name="Settings" component={SettingsScreen} />
           <Drawer.Screen name="Cards" component={CardsScreen} />
           <Drawer.Screen name="Player" component={PlayerScreen}/>
@@ -63,12 +63,12 @@ export default function App() {
 
 function getHeaderTitle(routeName: string): string {
   const titles: Record<string, string> = {
-    Home: 'Inicio',
-    Clans: 'Clanes',
-    Decks: 'Mazos',
-    Settings: 'Ajustes',
-    Cards: 'Cartas',
-    Player: 'Jugador'
+    Home: 'Home',
+    Clans: 'Clans',
+    Leaderboard: 'Leaderboard',
+    Settings: 'Settings',
+    Cards: 'Cards',
+    Player: 'Player'
   };
   return titles[routeName] || routeName;
 }

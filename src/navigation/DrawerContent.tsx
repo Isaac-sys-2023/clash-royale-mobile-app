@@ -65,11 +65,11 @@ const DrawerContent: React.FC<DrawerContentProps> = ({
                     <Text style={[drawerContentStyles.text, getTextStyle('Home')]}>Home</Text>
                 </TouchableOpacity>
                 <TouchableOpacity
-                    style={[drawerContentStyles.menuItem, getItemStyle('Decks')]}
-                    onPress={() => viewModel.navigateTo('Decks')}
+                    style={[drawerContentStyles.menuItem, getItemStyle('Leaderboard')]}
+                    onPress={() => viewModel.navigateTo('Leaderboard')}
                 >
-                    {getImage('Decks')}
-                    <Text style={[drawerContentStyles.text, getTextStyle('Decks')]}>Decks</Text>
+                    {getImage('Leaderboard')}
+                    <Text style={[drawerContentStyles.text, getTextStyle('Leaderboard')]}>Leaderboard</Text>
                 </TouchableOpacity>
                 <TouchableOpacity
                     style={[drawerContentStyles.menuItem, getItemStyle('Player')]}

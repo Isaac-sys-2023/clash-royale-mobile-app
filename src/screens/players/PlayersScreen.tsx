@@ -8,6 +8,9 @@ import { Badge, Player } from '@/src/models/Player';
 import { BattleLog, BattlePlayerLog } from '@/src/models/BattlePlayerLog';
 import playerStyles from './playersStyles'
 
+import { RouteProp, useFocusEffect, useRoute } from '@react-navigation/native';
+import { RootDrawerParamList } from '@/src/navigation/navigation';
+
 interface PlayerScreenProps {
     tag?: string;
 }
@@ -19,23 +22,55 @@ enum PlayerSection {
     CARDS = 'Cards'
 }
 
-const PlayerScreen = ({ tag }: PlayerScreenProps) => {
+const PlayerScreen = ({ tag: propTag }: PlayerScreenProps) => {
+    const route = useRoute<RouteProp<RootDrawerParamList, 'Player'>>();
+
     const [viewModel] = useState(() => new PlayersViewModel());
+
+    const navigationTag = route.params?.tag;
+    const initialTag = navigationTag || propTag || '';
+    const [searchInput, setSearchInput] = useState(initialTag);
+
     const [player, setPlayer] = useState<Player>(viewModel.createEmptyPlayer());
     const [playerBattleLog, setPlayerBattleLog] = useState<BattlePlayerLog>(viewModel.createEmptyPlayerBattleLog())
     const [isLoading, setIsLoading] = useState(false);
     const [error, setError] = useState<string | null>(null);
-    const [searchInput, setSearchInput] = useState(tag ? tag.trim().replace('#', '') : '');
     const [displayedBattles, setDisplayedBattles] = useState<BattleLog[]>([]);
     const [displayedBadges, setDisplayedBadges] = useState<Badge[]>([]);
 
     const [activeSection, setActiveSection] = useState<PlayerSection>(PlayerSection.BATTLES);
 
-    useEffect(() => {
-        if (tag && tag.trim()) {
-            handleSearch();
-        }
-    }, []);
+    useFocusEffect(
+        useCallback(() => {
+            const currentTag = route.params?.tag || propTag || '';
+            const loadPlayer = async () => {
+                setSearchInput(currentTag);
+                if (currentTag) {
+                    Keyboard.dismiss();
+                    viewModel.setCurrentTag(currentTag);
+                    setIsLoading(true);
+                    setError(null);
+
+                    try {
+                        await viewModel.searchPlayer();
+                        setPlayer(viewModel.getPlayer());
+                        setPlayerBattleLog(viewModel.getPlayerBattleLog());
+                        setError(viewModel.getError());
+                        viewModel.resetPagination();
+                    } catch (error) {
+                        console.error('Search error:', error);
+                        setError('Error al buscar el jugador');
+                        setPlayer(viewModel.createEmptyPlayer());
+                        setPlayerBattleLog(viewModel.createEmptyPlayerBattleLog());
+                    } finally {
+                        setIsLoading(false);
+                    }
+                }
+            };
+
+            loadPlayer();
+        }, [route.params?.tag, propTag, viewModel])
+    );
 
     const handleSearch = useCallback(async () => {
         if (!searchInput.trim()) {
@@ -49,7 +84,6 @@ const PlayerScreen = ({ tag }: PlayerScreenProps) => {
         setError(null);
 
         try {
-            viewModel.setCurrentTag(searchInput);
             await viewModel.searchPlayer();
             setPlayer(viewModel.getPlayer());
             setPlayerBattleLog(viewModel.getPlayerBattleLog());

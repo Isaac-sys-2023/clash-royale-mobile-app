@@ -8,8 +8,11 @@ import { Badge, Player } from '@/src/models/Player';
 import { BattleLog, BattlePlayerLog } from '@/src/models/BattlePlayerLog';
 import playerStyles from './playersStyles'
 
-import { RouteProp, useFocusEffect, useRoute } from '@react-navigation/native';
+import { RouteProp, useFocusEffect, useNavigation, useRoute } from '@react-navigation/native';
 import { RootDrawerParamList } from '@/src/navigation/navigation';
+import { DrawerNavigationProp } from '@react-navigation/drawer';
+
+type ClansTableNavigationProp = DrawerNavigationProp<RootDrawerParamList, 'Clans'>;
 
 interface PlayerScreenProps {
     tag?: string;
@@ -26,6 +29,8 @@ const PlayerScreen = ({ tag: propTag }: PlayerScreenProps) => {
     const route = useRoute<RouteProp<RootDrawerParamList, 'Player'>>();
 
     const [viewModel] = useState(() => new PlayersViewModel());
+
+    const navigation = useNavigation<ClansTableNavigationProp>();
 
     const navigationTag = route.params?.tag;
     const initialTag = navigationTag || propTag || '';
@@ -79,7 +84,7 @@ const PlayerScreen = ({ tag: propTag }: PlayerScreenProps) => {
         }
 
         Keyboard.dismiss();
-        viewModel.setCurrentTag(searchInput);
+        viewModel.setCurrentTag(searchInput.toUpperCase());
         setIsLoading(true);
         setError(null);
 
@@ -107,6 +112,12 @@ const PlayerScreen = ({ tag: propTag }: PlayerScreenProps) => {
             setDisplayedBadges(viewModel.getPaginatedBadges());
         }
     }, [playerBattleLog, player]);
+
+    const handleClanPress = (clanTag: string) => {
+        navigation.navigate('Clans', {
+            tag: clanTag.replace('#', '')
+        });
+    };
 
     const loadMoreBattles = () => {
         viewModel.loadMoreBattles();
@@ -325,6 +336,18 @@ const PlayerScreen = ({ tag: propTag }: PlayerScreenProps) => {
                     <View style={playerStyles.playerContainer}>
                         <Text style={playerStyles.playerName}>{player.name}</Text>
                         <Text style={playerStyles.playerTag}>{player.tag}</Text>
+
+                        {player.clan ?
+                            <TouchableOpacity
+                                onPress={() => handleClanPress(player.clan.tag)}
+                                activeOpacity={0.7}
+                            >
+                                <Text style={playerStyles.clanName}>{player.clan.name}</Text>
+                                <Text style={playerStyles.clanTag}>{player.clan.tag}</Text>
+                            </TouchableOpacity>
+                            :
+                            <Text style={playerStyles.clanName}>Sin Clan</Text>
+                        }
 
                         <View style={{ flexDirection: 'row', alignItems: 'center', marginBottom: 8 }}>
                             <Image

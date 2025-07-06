@@ -70,6 +70,18 @@ const playerStyles = StyleSheet.create({
         marginBottom: 12,
         textAlign: 'center'
     },
+    clanName: {
+        color: '#FFF',
+        fontSize: 18,
+        fontWeight: 'bold',
+        textAlign: 'center'
+    },
+    clanTag: {
+        color: '#AAA',
+        fontSize: 14,
+        marginBottom: 12,
+        textAlign: 'center'
+    },
     playerInfo: {
         color: '#FFF',
         fontSize: 16,

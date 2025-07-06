@@ -10,6 +10,8 @@ import { MaterialIcons } from "@expo/vector-icons";
 import { SelectCountries } from "@/src/components/select/SelectCountries";
 import clanStyles from './clanStyles'
 import MembersTable from "@/src/components/table/MembersTable";
+import { RootDrawerParamList } from "@/src/navigation/navigation";
+import { RouteProp, useFocusEffect, useRoute } from "@react-navigation/native";
 
 interface ClanScreenProps {
     tag?: string;
@@ -20,12 +22,20 @@ enum ClanSection {
     DETAILS = 'Details'
 }
 
-export default function ClansScreen({ tag }: ClanScreenProps) {
-    const [viewModel] = useState(new ClansViewModel());
+export default function ClansScreen({ tag: propTag }: ClanScreenProps) {
+    const route = useRoute<RouteProp<RootDrawerParamList, 'Clans'>>();
+
+    const [viewModel] = useState(() => new ClansViewModel());
 
     const [clans, setClans] = useState<Clans>({ items: [] });
 
-    const [currentTagClan, setCurrentTagClan] = useState<string>(tag || '');
+    const navigationTag = route.params?.tag;
+    const initialTag = navigationTag || propTag || '';
+    const [searchInput, setSearchInput] = useState(initialTag);
+    // const [searchInput, setSearchInput] = useState(tag ? tag.trim().replace('#', '') : '');
+
+    // const [currentTagClan, setCurrentTagClan] = useState<string>(tag || '');
+    const [currentTagClan, setCurrentTagClan] = useState<string>('');
     const [currentClan, setCurrentClan] = useState<Clan>(viewModel.createEmptyClan());
     const [currentClanMembers, setCurrentClanMembers] = useState<Members>({ items: [] });
     const [currentClanWarsLog, setCurrentClanWarsLog] = useState<War>({ items: [] });
@@ -35,19 +45,53 @@ export default function ClansScreen({ tag }: ClanScreenProps) {
     const [error, setError] = useState<string | null>(null);
 
     const [selectedCountry, setSelectedCountry] = useState<Location | null>(null);
-    const [searchInput, setSearchInput] = useState(tag ? tag.trim().replace('#', '') : '');
 
     const [minMembers, setMinMembers] = useState<string>('0');
     const [maxMembers, setMaxMembers] = useState<string>('50');
     const [minScore, setMinScore] = useState<string>('0');
 
-    const [activeSection, setActiveSection] = useState<ClanSection>(tag ? ClanSection.DETAILS : ClanSection.CLANS);
+    // const [activeSection, setActiveSection] = useState<ClanSection>(tag ? ClanSection.DETAILS : ClanSection.CLANS);
+    const [activeSection, setActiveSection] = useState<ClanSection>(ClanSection.CLANS);
 
-    useEffect(() => {
-        if (tag && tag.trim()) {
-            handleSearch();
-        }
-    }, []);
+    // useEffect(() => {
+    //     if (tag && tag.trim()) {
+    //         handleSearch();
+    //     }
+    // }, []);
+    useFocusEffect(
+        useCallback(() => {
+            const currentTag = route.params?.tag || propTag || '';
+            const loadClan = async () => {
+                setSearchInput(currentTag);
+                setActiveSection(ClanSection.DETAILS);
+                if (currentTag) {
+                    Keyboard.dismiss();
+                    setIsLoading(true);
+                    setError(null);
+
+                    try {
+                        await viewModel.loadClan(currentTag);
+                        const clan = viewModel.getCurrentClan()
+                        console.log('Search results:', clan);
+                        setCurrentClan(clan);
+                        setCurrentTagClan(clan.tag)
+                        setCurrentClanCurrentWar(viewModel.getCurrentWarClan());
+                        setCurrentClanMembers(viewModel.getMembersClan());
+                        setCurrentClanWarsLog(viewModel.getWarsClan());
+                    } catch (error) {
+                        console.error('Search error:', error);
+                        setError('Error al buscar el clan');
+                        setCurrentClan(viewModel.createEmptyClan());
+                        setCurrentClanCurrentWar(viewModel.createEmptyCurrentWar());
+                    } finally {
+                        setIsLoading(false);
+                    }
+                }
+            };
+
+            loadClan();
+        }, [route.params?.tag, propTag, viewModel])
+    );
 
     const handleSearch = useCallback(async () => {
         if (activeSection === ClanSection.CLANS && searchInput.trim().length < 3) {
@@ -74,8 +118,6 @@ export default function ClansScreen({ tag }: ClanScreenProps) {
                 limit: 50
             };
 
-            console.log('Search params:', params);
-
             if (activeSection === ClanSection.CLANS) {
                 await viewModel.loadClans(
                     params.name,
@@ -89,9 +131,8 @@ export default function ClansScreen({ tag }: ClanScreenProps) {
                 setClans(results);
             }
             if (activeSection === ClanSection.DETAILS) {
-                await viewModel.loadClan(searchInput);
-                const clan = viewModel.getCurrentClan()
-                console.log('Search results:', clan);
+                await viewModel.loadClan(searchInput.toUpperCase());
+                const clan = viewModel.getCurrentClan();
                 setCurrentClan(clan);
                 setCurrentTagClan(clan.tag)
                 setCurrentClanCurrentWar(viewModel.getCurrentWarClan());

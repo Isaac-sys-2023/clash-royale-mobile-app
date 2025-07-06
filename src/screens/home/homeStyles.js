@@ -37,6 +37,7 @@ const homeStyles = StyleSheet.create({
         backgroundColor: '#444',
         borderRadius: 8,
         width: '100%',
+        marginBottom: 10,
     },
     sectionTitle: {
         padding: 10,

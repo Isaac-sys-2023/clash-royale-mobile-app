@@ -32,9 +32,7 @@ export default function ClansScreen({ tag: propTag }: ClanScreenProps) {
     const navigationTag = route.params?.tag;
     const initialTag = navigationTag || propTag || '';
     const [searchInput, setSearchInput] = useState(initialTag);
-    // const [searchInput, setSearchInput] = useState(tag ? tag.trim().replace('#', '') : '');
-
-    // const [currentTagClan, setCurrentTagClan] = useState<string>(tag || '');
+    
     const [currentTagClan, setCurrentTagClan] = useState<string>('');
     const [currentClan, setCurrentClan] = useState<Clan>(viewModel.createEmptyClan());
     const [currentClanMembers, setCurrentClanMembers] = useState<Members>({ items: [] });
@@ -50,14 +48,8 @@ export default function ClansScreen({ tag: propTag }: ClanScreenProps) {
     const [maxMembers, setMaxMembers] = useState<string>('50');
     const [minScore, setMinScore] = useState<string>('0');
 
-    // const [activeSection, setActiveSection] = useState<ClanSection>(tag ? ClanSection.DETAILS : ClanSection.CLANS);
     const [activeSection, setActiveSection] = useState<ClanSection>(ClanSection.CLANS);
 
-    // useEffect(() => {
-    //     if (tag && tag.trim()) {
-    //         handleSearch();
-    //     }
-    // }, []);
     useFocusEffect(
         useCallback(() => {
             const currentTag = route.params?.tag || propTag || '';
@@ -86,6 +78,8 @@ export default function ClansScreen({ tag: propTag }: ClanScreenProps) {
                     } finally {
                         setIsLoading(false);
                     }
+                }else{
+                    setActiveSection(ClanSection.CLANS);
                 }
             };
 

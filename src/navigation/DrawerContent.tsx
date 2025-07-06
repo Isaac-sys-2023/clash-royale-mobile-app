@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, TouchableOpacity, StyleSheet, Image } from 'react-native';
+import { View, Text, TouchableOpacity, Image } from 'react-native';
 import { DrawerViewModel } from './DrawerViewModel';
 import { SafeAreaView } from 'react-native-safe-area-context';
 

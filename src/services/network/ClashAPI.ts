@@ -2,7 +2,7 @@ import { ApiService } from './ApiService';
 import { CardsResponse } from '../../models/Card';
 import { Player } from '@/src/models/Player';
 import { BattlePlayerLog } from '@/src/models/BattlePlayerLog';
-import { Locations } from '@/src/models/Location';
+import { Locations, PathOfLegendsPlayers } from '@/src/models/Location';
 import { Clan, Clans, Members } from '@/src/models/Clan';
 import { CurrentRiverRace, War } from '@/src/models/RiverRaceLog';
 
@@ -49,6 +49,19 @@ export class ClashRoyaleAPI extends ApiService {
       return this.get<Locations>(`/locations`)
     } catch (error) {
       console.error('Error fetching locations data:', error);
+      throw error;
+    }
+  }
+
+  async getTopPlayersLocation(locationId: number, limit?: number): Promise<PathOfLegendsPlayers> {
+    try {
+      const params = new URLSearchParams();
+
+      if (limit) params.append('limit', limit.toString());
+
+      return this.get<PathOfLegendsPlayers>(`/locations/${locationId}/pathoflegend/players?${params.toString()}`)
+    } catch (error) {
+      console.error('Error fetching top players data:', error);
       throw error;
     }
   }

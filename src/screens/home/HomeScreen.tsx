@@ -66,6 +66,13 @@ export default function HomeScreen() {
                                     <Image source={require('../../assets/images/donatedcards.webp')} style={homeStyles.gridImage} />
                                     <Text style={homeStyles.gridTitle}>Cards</Text>
                                 </TouchableOpacity>
+                                <TouchableOpacity
+                                    style={homeStyles.gridItem}
+                                    onPress={() => navigation.navigate('Leaderboard')}
+                                >
+                                    <Image source={require('../../assets/images/league10.png')} style={homeStyles.gridImage} />
+                                    <Text style={homeStyles.gridTitle}>Cards</Text>
+                                </TouchableOpacity>
                             </View>
                         </View>
                     </View>

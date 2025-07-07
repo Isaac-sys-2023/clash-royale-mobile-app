@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from 'react';
-import { View, StyleSheet, TouchableOpacity, Image, Text } from 'react-native';
+import { View, TouchableOpacity, Image, Text } from 'react-native';
 import NetInfo from '@react-native-community/netinfo';
 import { useNavigation } from '@react-navigation/native';
 import { DrawerNavigationProp } from '@react-navigation/drawer';
 import { RootDrawerParamList } from '@/src/navigation/navigation';
-
+import connectionStyles from './connectionStyles'
 import { Animated, Easing } from 'react-native';
 
 type HomeNavigationProp = DrawerNavigationProp<RootDrawerParamList>;
@@ -56,18 +56,18 @@ export const ConnectionGuard = ({ children }: { children: React.ReactNode }) => 
 
     if (!isConnected) {
         return (
-            <View style={styles.blackScreen}>
-                <Text style={styles.connectionStatusText}>LOST CONNECTION</Text>
-                <Text style={styles.reconnectMessage}>Please check your internet connection and try again.</Text>
+            <View style={connectionStyles.blackScreen}>
+                <Text style={connectionStyles.connectionStatusText}>LOST CONNECTION</Text>
+                <Text style={connectionStyles.reconnectMessage}>Please check your internet connection and try again.</Text>
                 <Animated.Image
                     source={require('../../assets/images/nowifi.png')}
-                    style={[styles.lagIcon, { transform: [{ scale: scaleValue }] }]}
+                    style={[connectionStyles.lagIcon, { transform: [{ scale: scaleValue }] }]}
                 />
                 <TouchableOpacity onPress={handleRetry} style={{ flexDirection: 'row' }}>
                     <Text style={{ color: 'white', fontSize: 30, marginRight: 5 }}>Retry</Text>
                     <Image
                         source={require('../../assets/images/icons8-retry-64.png')}
-                        style={styles.retryIcon}
+                        style={connectionStyles.retryIcon}
                     />
                 </TouchableOpacity>
             </View>
@@ -76,39 +76,3 @@ export const ConnectionGuard = ({ children }: { children: React.ReactNode }) => 
 
     return <>{children}</>;
 };
-
-const styles = StyleSheet.create({
-    blackScreen: {
-        flex: 1,
-        backgroundColor: 'black',
-        justifyContent: 'center',
-        alignItems: 'center',
-        position: 'absolute',
-        width: '100%',
-        height: '100%',
-        zIndex: 999,
-    },
-    connectionStatusText: {
-        color: 'white',
-        fontSize: 30,
-        fontWeight: 'bold',
-        marginBottom: 10,
-    },
-    reconnectMessage: {
-        color: 'white',
-        fontSize: 16,
-        textAlign: 'center',
-        marginBottom: 30,
-        paddingHorizontal: 20,
-    },
-    lagIcon: {
-        width: 200,
-        height: 200,
-        marginBottom: 30,
-    },
-    retryIcon: {
-        width: 50,
-        height: 50,
-        tintColor: 'white',
-    },
-});

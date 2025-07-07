@@ -60,18 +60,18 @@ export default function HomeScreen() {
 
                             <View style={homeStyles.gridRow}>
                                 <TouchableOpacity
-                                    style={homeStyles.gridItem}
+                                    style={[homeStyles.gridItem, { marginRight: 5 }]}
                                     onPress={() => navigation.navigate('Cards')}
                                 >
                                     <Image source={require('../../assets/images/donatedcards.webp')} style={homeStyles.gridImage} />
                                     <Text style={homeStyles.gridTitle}>Cards</Text>
                                 </TouchableOpacity>
                                 <TouchableOpacity
-                                    style={homeStyles.gridItem}
+                                    style={[homeStyles.gridItem, { marginLeft: 5 }]}
                                     onPress={() => navigation.navigate('Leaderboard')}
                                 >
                                     <Image source={require('../../assets/images/league10.png')} style={homeStyles.gridImage} />
-                                    <Text style={homeStyles.gridTitle}>Cards</Text>
+                                    <Text style={homeStyles.gridTitle}>Players Leaderboard</Text>
                                 </TouchableOpacity>
                             </View>
                         </View>

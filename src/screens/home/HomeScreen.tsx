@@ -25,10 +25,16 @@ export default function HomeScreen() {
                 showsHorizontalScrollIndicator={false}
             >
                 <View style={homeStyles.container}>
-                    <View style={homeStyles.initSection}>
-                        <Image source={require('../../assets/images/King.png')} style={homeStyles.initSectionImage} />
-                        <Text style={homeStyles.initSectionTitle}>WELCOME TO INFO ROYALE!</Text>
-                        <Text style={[homeStyles.initSectionText, { textAlign: 'center' }]}>Here you can find relevant Clash Royale information</Text>
+                    <View style={homeStyles.initSectionContainer}>
+                        <Image
+                            source={require('../../assets/images/fondoRoyale.jpeg')} // Cambia por tu imagen
+                            style={homeStyles.backgroundImage}
+                        />
+                        <View style={homeStyles.initSection}>
+                            <Image source={require('../../assets/images/King.png')} style={homeStyles.initSectionImage} />
+                            <Text style={homeStyles.initSectionTitle}>WELCOME TO INFO ROYALE!</Text>
+                            <Text style={[homeStyles.initSectionText, { textAlign: 'center' }]}>Here you can find relevant Clash Royale information</Text>
+                        </View>
                     </View>
 
                     <View style={homeStyles.section}>
@@ -65,7 +71,7 @@ export default function HomeScreen() {
                     </View>
 
                     <View style={homeStyles.section}>
-                        <LeaderboardPlayers title="Top 3 Players in your country" limit={3}/>
+                        <LeaderboardPlayers title="Top 3 Players in your country" limit={3} />
                     </View>
                 </View>
             </ScrollView>

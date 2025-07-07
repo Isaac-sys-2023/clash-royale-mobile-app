@@ -5,12 +5,28 @@ const homeStyles = StyleSheet.create({
         padding: 10,
         flex: 1,
     },
+    initSectionContainer: {
+        position: 'relative',
+        width: '100%',
+        alignItems: 'center',
+        paddingVertical: 5,
+        borderRadius: 8,
+        overflow: 'hidden',
+    },
+    backgroundImage: {
+        position: 'absolute',
+        width: '100%',
+        height: '100%',
+        opacity: 0.7,
+        resizeMode: 'cover',
+        borderRadius: 8,
+    },
     initSection: {
         alignSelf: 'flex-start',
         justifyContent: 'center',
         alignItems: 'center',
         padding: 10,
-        backgroundColor: '#2370b8',
+        // backgroundColor: '#2370b8',
         borderRadius: 8,
         width: '100%',
         marginBottom: 10,
@@ -28,7 +44,7 @@ const homeStyles = StyleSheet.create({
     initSectionImage: {
         width: 170,
         height: undefined,
-        aspectRatio: 70/90,
+        aspectRatio: 70 / 90,
         marginRight: 10,
     },
     section: {

@@ -6,8 +6,6 @@ import 'react-native-gesture-handler';
 import HomeScreen from "./src/screens/home/HomeScreen";
 import ClansScreen from "./src/screens/clans/ClansScreen";
 import PlayerLeaderboardScreen from "./src/screens/leaderboardPlayer/PlayerLeaderboardScreen";
-import SettingsScreen from "./src/screens/settings/SettingsScreen";
-
 import { CustomHeader } from "./src/components/customHeader/CustomHeader";
 import DrawerContent from "./src/navigation/DrawerContent";
 
@@ -40,7 +38,6 @@ export default function App() {
                 <CustomHeader
                   title={getHeaderTitle(route.name)}
                   onLogoPress={() => navigation.navigate('Home')}
-                  onSettingsPress={() => navigation.navigate('Settings')}
                   onMenuPress={() => navigation.openDrawer()}
                 />
               ),
@@ -55,7 +52,6 @@ export default function App() {
             <Drawer.Screen name="Home" component={HomeScreen} />
             <Drawer.Screen name="Clans" component={ClansScreen} />
             <Drawer.Screen name="Leaderboard" component={PlayerLeaderboardScreen} />
-            <Drawer.Screen name="Settings" component={SettingsScreen} />
             <Drawer.Screen name="Cards" component={CardsScreen} />
             <Drawer.Screen name="Player" component={PlayerScreen} />
           </Drawer.Navigator>
@@ -71,7 +67,6 @@ function getHeaderTitle(routeName: string): string {
     Home: 'Home',
     Clans: 'Clans',
     Leaderboard: 'Leaderboard',
-    Settings: 'Settings',
     Cards: 'Cards',
     Player: 'Player'
   };

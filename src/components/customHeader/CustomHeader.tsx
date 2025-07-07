@@ -6,14 +6,12 @@ import { StatusBar } from 'react-native';
 interface CustomHeaderProps {
   title: string;
   onLogoPress: () => void;
-  onSettingsPress: () => void;
   onMenuPress: () => void;
 }
 
 export const CustomHeader: React.FC<CustomHeaderProps> = ({ 
   title, 
   onLogoPress,
-  onSettingsPress,
   onMenuPress
 }) => {
   return (
@@ -33,12 +31,6 @@ export const CustomHeader: React.FC<CustomHeaderProps> = ({
       </View>
 
       <View style={customHeaderStyles.rightSection}>
-        <TouchableOpacity 
-          onPress={onSettingsPress}
-          style={customHeaderStyles.iconButton}
-        >
-          <Text style={customHeaderStyles.icon}>⚙️</Text>
-        </TouchableOpacity>
         <TouchableOpacity 
           onPress={onMenuPress}
           style={customHeaderStyles.iconButton}

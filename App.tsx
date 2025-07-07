@@ -16,6 +16,7 @@ import { RootDrawerParamList } from "./src/navigation/navigation";
 import { StatusBar } from "react-native";
 import CardsScreen from "./src/screens/cards/CardsScreen";
 import PlayerScreen from "./src/screens/players/PlayersScreen";
+import { ConnectionGuard } from "./src/screens/noconnection/ConnectionGuard";
 
 const Drawer = createDrawerNavigator<RootDrawerParamList>();
 
@@ -27,36 +28,40 @@ export default function App() {
         backgroundColor="transparent"
         barStyle="light-content"
       />
+
       <NavigationContainer>
-        <Drawer.Navigator
-          initialRouteName="Home"
-          drawerContent={(props) => <DrawerContent {...props}/>}
-          screenOptions={({ route, navigation }) => ({
-            headerShown: true,
-            header: () => (
-              <CustomHeader
-                title={getHeaderTitle(route.name)}
-                onLogoPress={() => navigation.navigate('Home')}
-                onSettingsPress={() => navigation.navigate('Settings')}
-                onMenuPress={() => navigation.openDrawer()}
-              />
-            ),
-            drawerType: 'slide',
-            drawerPosition: "right",
-            drawerStyle: {
-              backgroundColor: '#000000',
-              width: 240,
-            },
-          })}
-        >
-          <Drawer.Screen name="Home" component={HomeScreen} />
-          <Drawer.Screen name="Clans" component={ClansScreen} />
-          <Drawer.Screen name="Leaderboard" component={PlayerLeaderboardScreen} />
-          <Drawer.Screen name="Settings" component={SettingsScreen} />
-          <Drawer.Screen name="Cards" component={CardsScreen} />
-          <Drawer.Screen name="Player" component={PlayerScreen}/>
-        </Drawer.Navigator>
+        <ConnectionGuard>
+          <Drawer.Navigator
+            initialRouteName="Home"
+            drawerContent={(props) => <DrawerContent {...props} />}
+            screenOptions={({ route, navigation }) => ({
+              headerShown: true,
+              header: () => (
+                <CustomHeader
+                  title={getHeaderTitle(route.name)}
+                  onLogoPress={() => navigation.navigate('Home')}
+                  onSettingsPress={() => navigation.navigate('Settings')}
+                  onMenuPress={() => navigation.openDrawer()}
+                />
+              ),
+              drawerType: 'slide',
+              drawerPosition: "right",
+              drawerStyle: {
+                backgroundColor: '#000000',
+                width: 240,
+              },
+            })}
+          >
+            <Drawer.Screen name="Home" component={HomeScreen} />
+            <Drawer.Screen name="Clans" component={ClansScreen} />
+            <Drawer.Screen name="Leaderboard" component={PlayerLeaderboardScreen} />
+            <Drawer.Screen name="Settings" component={SettingsScreen} />
+            <Drawer.Screen name="Cards" component={CardsScreen} />
+            <Drawer.Screen name="Player" component={PlayerScreen} />
+          </Drawer.Navigator>
+        </ConnectionGuard>
       </NavigationContainer>
+
     </SafeAreaProvider>
   );
 }
